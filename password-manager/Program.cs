@@ -2,11 +2,12 @@
 
 namespace passwordmanager
 {
-    class MainClass
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Hej vänner?");
+            string name = Console.ReadLine();
+            Console.WriteLine(" Hej , " + name + "!");
         }
     }
 }
