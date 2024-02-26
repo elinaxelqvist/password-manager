@@ -6,8 +6,7 @@ namespace passwordmanager
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hej vänner!!");
-            Console.WriteLine("Troja");
+            Console.WriteLine("Hej vänner?");
         }
     }
 }
