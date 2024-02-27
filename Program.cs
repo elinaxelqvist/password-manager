@@ -28,12 +28,19 @@ namespace password_manager
             CreateFileIfNotExists(serverFilePath);
 
 
-            //
+            //Instansierar ett objekt av klassen SecretKey så vi kan använda metoderna där
 
             var secretKeyHandler = new SecretKey();
+
+            //Vi anropar metoden GenerateSecretKey() och lagrar nyckeln i byte arrayen secretKey
             byte[] secretKey = secretKeyHandler.GenerateSecretKey();
 
-            secretKeyHandler.SaveSecretKeyToFile(clientFilePath, secretKey);
+
+            string user = "Troja"; 
+
+
+            //Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen och byte arrayen
+            secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
 
 
 
