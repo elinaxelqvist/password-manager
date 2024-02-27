@@ -8,9 +8,15 @@ class Program
 {
     static void Main(string[] args)
     {
-        string name = Console.ReadLine();
-        Console.WriteLine(" Hej , " + name + "!");
+        if (args.Length != 2)
+        {
+            Console.WriteLine("Felaktigt antal argument.");
+            return;
 
-        //test
+
+
+        }
+        
+        
     }
 }
