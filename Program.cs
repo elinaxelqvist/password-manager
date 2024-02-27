@@ -27,7 +27,7 @@ namespace password_manager
             CreateFileIfNotExists(clientFilePath);
             CreateFileIfNotExists(serverFilePath);
 
-
+            //Användaren får skriva in sitt användarnamn
             Console.WriteLine("Skriv ditt användarnamn");
             string user = Console.ReadLine();
 
@@ -43,7 +43,7 @@ namespace password_manager
             
 
 
-            //Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen och byte arrayen
+            //Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen, user och byte arrayen 
             secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
 
 
