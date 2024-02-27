@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 
 namespace password_manager
@@ -26,6 +27,8 @@ namespace password_manager
         {
             // Konvertera nyckeln till en sträng
             var secretKeyString = Convert.ToBase64String(secretKey);
+
+            Console.WriteLine(secretKeyString);
 
             // Skriv nyckeln till filen
             File.WriteAllText(filePath, secretKeyString);
