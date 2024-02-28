@@ -17,11 +17,15 @@ namespace password_manager
             // Skapa en dictionary där nyckeln är initieringsvektorn och värdet är en lista av lösenord
             Dictionary<string, List<string>> vaultStructure = new Dictionary<string, List<string>>();
 
-            // Kontrollera om filen redan finns och ladda innehållet om den gör det
+            // Kontrollera om filen redan finns
             if (File.Exists(filePath))
             {
+                // Läs innehållet från filen och deserialisera det till en dictionary-struktur
                 string json = File.ReadAllText(filePath);
-                vaultStructure = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+                if (!string.IsNullOrEmpty(json))
+                {
+                    vaultStructure = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+                }
             }
 
             // Lägg till lösenord i valvet
@@ -48,16 +52,6 @@ namespace password_manager
 }
 
 
-        
-           
-
-
-        
-            
-        
-        
-
-        
 
 
 
@@ -66,5 +60,16 @@ namespace password_manager
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
 
