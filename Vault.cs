@@ -11,7 +11,6 @@ namespace password_manager
     public class Vault
     {
 
-
         public static void ServerFileStructure(string filePath, string iv, string password)
         {
             // Skapa en dictionary där nyckeln är initieringsvektorn och värdet är en lista av lösenord
