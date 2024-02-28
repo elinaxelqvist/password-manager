@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Security.Cryptography;
 
 namespace password_manager
 {
@@ -46,7 +47,10 @@ namespace password_manager
             //Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen, user och byte arrayen 
             secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
 
+            //Anropar slumpmässig initieringvektor
+            byte[] iv = Aes_Kryptering.GenerateRandomIV();
 
+            Aes_Kryptering.PrintByteArray(iv);
 
 
 
