@@ -75,13 +75,22 @@ namespace password_manager
 
             string stringIV = Convert.ToBase64String(iv);
 
+            Console.WriteLine("Skriv in prop");
+            string prop = Console.ReadLine();
+
             Console.WriteLine("Skriv lösenordet du vill lagra i valvet:");
             string password= Console.ReadLine();
 
-           Vault.ServerFileStructure(serverFilePath,stringIV,password);
+            
+
+           Vault.ServerFileStructure(serverFilePath,stringIV,prop, password);
 
 
+            Console.WriteLine("Skriv in det kommando du vill göra");
+            string input=Console.ReadLine();
 
+
+            Command.CommandType(input);
         }
 
         static void CreateFileIfNotExists(string filePath)

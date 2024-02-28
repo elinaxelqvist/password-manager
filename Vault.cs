@@ -1,54 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 namespace password_manager
 {
     public class Vault
     {
-
-        public static void ServerFileStructure(string filePath, string iv, string password)
+        public static void ServerFileStructure(string filePath, string iv, string prop, string password)
         {
-            // Skapa en dictionary där nyckeln är initieringsvektorn och värdet är en lista av lösenord
-            Dictionary<string, List<string>> vaultStructure = new Dictionary<string, List<string>>();
+            List<VaultEntry> vaultEntries = new List<VaultEntry>();
 
             // Kontrollera om filen redan finns
             if (File.Exists(filePath))
             {
-                // Läs innehållet från filen och deserialisera det till en dictionary-struktur
+                // Läs innehållet från filen och deserialisera det till en lista av VaultEntry
                 string json = File.ReadAllText(filePath);
                 if (!string.IsNullOrEmpty(json))
                 {
-                    vaultStructure = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+                    vaultEntries = JsonSerializer.Deserialize<List<VaultEntry>>(json);
                 }
             }
 
-            // Lägg till lösenord i valvet
-            AddPassword(vaultStructure, iv, password);
+            // Lägg till nytt (prop, password)-par
+            vaultEntries.Add(new VaultEntry { IV = iv, Prop = prop, Password = password });
 
             // Konvertera till JSON-sträng och spara i filen
-            string jsonOutput = JsonSerializer.Serialize(vaultStructure, new JsonSerializerOptions { WriteIndented = true });
+            string jsonOutput = JsonSerializer.Serialize(vaultEntries, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filePath, jsonOutput);
 
             Console.WriteLine("Lösenord tillagt i serverfilen.");
         }
+    }
 
-        // Metod för att lägga till ett lösenord i valvet
-        public static void AddPassword(Dictionary<string, List<string>> vaultStructure, string iv, string password)
-        {
-            if (!vaultStructure.ContainsKey(iv))
-            {
-                vaultStructure[iv] = new List<string>();
-            }
-
-            vaultStructure[iv].Add(password);
-        }
+    // En klass för att representera varje inmatning i valvet
+    public class VaultEntry
+    {
+        public string IV { get; set; }
+        public string Prop { get; set; }
+        public string Password { get; set; }
     }
 }
+
+
+
+
 
 
 
