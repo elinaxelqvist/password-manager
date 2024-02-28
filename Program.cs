@@ -70,6 +70,16 @@ namespace password_manager
 
             Console.WriteLine("Valvnyckel genererad: " + Convert.ToBase64String(vaultKey));
 
+            // Användning av ServerFileStructure-metoden för att skapa en serverfilstruktur
+
+
+            string stringIV = Convert.ToBase64String(iv);
+
+            Console.WriteLine("Skriv lösenordet du vill lagra i valvet:");
+            string password= Console.ReadLine();
+
+           Vault.ServerFileStructure(serverFilePath,stringIV,password);
+
 
 
         }
