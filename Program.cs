@@ -38,7 +38,7 @@ namespace password_manager
             var secretKeyHandler = new SecretKey();
 
             //Vi anropar metoden GenerateSecretKey() och lagrar nyckeln i byte arrayen secretKey
-            byte[] secretKey = secretKeyHandler.GenerateSecretKey();
+            string secretKey = secretKeyHandler.GenerateSecretKey();
 
 
             
@@ -51,6 +51,24 @@ namespace password_manager
             byte[] iv = Aes_Kryptering.GenerateRandomIV();
 
             Aes_Kryptering.PrintByteArray(iv);
+
+
+            Console.WriteLine("Skapa ett lösenord");
+            string masterPassword = Console.ReadLine();
+
+            
+
+
+            Console.WriteLine("Det här är din hemliga nyckel. Kom ihåg den: " + secretKey);
+
+            
+
+
+
+            VaultKeyGenerator generator = new VaultKeyGenerator(secretKey);
+            byte[] vaultKey = generator.GenerateVaultKey(masterPassword, secretKey);
+
+            Console.WriteLine("Valvnyckel genererad: " + Convert.ToBase64String(vaultKey));
 
 
 

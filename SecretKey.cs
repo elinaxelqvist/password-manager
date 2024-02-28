@@ -8,7 +8,7 @@ namespace password_manager
 {
     public class SecretKey
     {
-        public byte[] GenerateSecretKey()
+        public string GenerateSecretKey()
         {
             // Skapa en byte-array för att lagra den hemliga nyckeln
             byte[] secretKey = new byte[32]; // 256 bitar
@@ -20,11 +20,13 @@ namespace password_manager
                 rng.GetBytes(secretKey);
             }
 
+            string stringSecretKey = Convert.ToBase64String(secretKey);
+
             // Returnera den genererade nyckeln
-            return secretKey;
+            return stringSecretKey;
         }
 
-        public void SaveSecretKeyToFile(string filePath, string user, byte[] secretKey)
+        public void SaveSecretKeyToFile(string filePath, string user, string secretKey)
         {
             Dictionary<string, string> userSecretKeys = LoadUserSecrets(filePath);
 
@@ -35,7 +37,7 @@ namespace password_manager
             }
             else
             {
-                userSecretKeys.Add(user, Convert.ToBase64String(secretKey));
+                userSecretKeys.Add(user, secretKey);
 
                 // Konvertera dictionary till JSON-sträng
                 string updatedJson = JsonSerializer.Serialize(userSecretKeys, new JsonSerializerOptions { WriteIndented = true });
