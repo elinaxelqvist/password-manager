@@ -30,8 +30,32 @@ namespace password_manager
 
 
 
+        public static void CreateOrOverwriteClientFile(string filePath)
+        {
+            // Försöker skapa eller skriva över filen
+            try
+            {
+                // Om filen redan finns, kommer detta att skriva över den
+                File.WriteAllText(filePath, ""); // Skapar en tom fil eller tömmer den om den redan finns
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ett fel uppstod vid skapande av filen '{filePath}': {ex.Message}");
+            }
 
-        public static void CreateOrOverwriteFile(string filePath)
+            //Instansierar ett objekt av klassen SecretKey så vi kan använda metoderna där
+            var secretKeyHandler = new SecretKey();
+
+            //Vi anropar metoden GenerateSecretKey() och lagrar nyckeln i byte arrayen secretKey
+            string secretKey = secretKeyHandler.GenerateSecretKey();
+
+            secretKeyHandler.SaveSecretKeyToFile(filePath, secretKey);
+        }
+
+
+
+
+        public static void CreateOrOverwriteServerFile(string filePath)
         {
             // Försöker skapa eller skriva över filen
             try

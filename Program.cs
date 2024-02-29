@@ -18,18 +18,19 @@ namespace password_manager
                 {
                     case "init":
                         // Kontrollera att vi har rätt antal argument
-                        if (args.Length == 2)
+                        if (args.Length == 3)
                         {
                             // Vi antar att både klient- och serverfilens sökvägar tillhandahålls
                             string clientFilePath = args[1];
                             string serverFilePath = args[2];
 
                             // Skapar eller skriver över filer direkt
-                            ManageFiles.CreateOrOverwriteFile(clientFilePath);
-                            ManageFiles.CreateOrOverwriteFile(serverFilePath);
+                            ManageFiles.CreateOrOverwriteClientFile(clientFilePath);
+                            ManageFiles.CreateOrOverwriteServerFile(serverFilePath);
 
                             Console.WriteLine($"Klient-filen '{clientFilePath}' och server-filen '{serverFilePath}' har skapats eller skrivits över.");
                         }
+
                         else
                         {
                             Console.WriteLine("Fel antal argument. Använd: init <klientfilens sökväg> <serverfilens sökväg>");
@@ -78,16 +79,7 @@ namespace password_manager
             }
                 
 
-            //Instansierar ett objekt av klassen SecretKey så vi kan använda metoderna där
-
-            var secretKeyHandler = new SecretKey();
-
-            //Vi anropar metoden GenerateSecretKey() och lagrar nyckeln i byte arrayen secretKey
-            string secretKey = secretKeyHandler.GenerateSecretKey();
-
-
-
-            //Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen, user och byte arrayen 
+            /*//Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen, user och byte arrayen 
             //secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
 
             //Anropar slumpmässig initieringvektor
@@ -110,7 +102,7 @@ namespace password_manager
 
 
 
-            /* Användning av ServerFileStructure-metoden för att skapa en serverfilstruktur
+            //Användning av ServerFileStructure-metoden för att skapa en serverfilstruktur
 
 
             string stringIV = Convert.ToBase64String(iv);
