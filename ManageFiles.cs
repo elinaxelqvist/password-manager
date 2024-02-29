@@ -29,7 +29,6 @@ namespace password_manager
 
 
 
-
         public static void CreateOrOverwriteClientFile(string filePath)
         {
             // Försöker skapa eller skriva över filen
@@ -50,6 +49,7 @@ namespace password_manager
             string secretKey = secretKeyHandler.GenerateSecretKey();
 
             secretKeyHandler.SaveSecretKeyToFile(filePath, secretKey);
+
         }
 
 
@@ -67,6 +67,15 @@ namespace password_manager
             {
                 Console.WriteLine($"Ett fel uppstod vid skapande av filen '{filePath}': {ex.Message}");
             }
+
+            // Generera en ny IV
+            byte[] iv = Aes_Kryptering.GenerateRandomIV();
+
+            // Konvertera IV till en Base64-sträng för lagring
+            string ivBase64 = Convert.ToBase64String(iv);
+
+            // Skriv IV-strängen till filen, skriver över den om den redan finns
+            File.WriteAllText(filePath, ivBase64);
         }
     }
 }

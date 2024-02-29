@@ -9,8 +9,6 @@ namespace password_manager
 {
     public class Aes_Kryptering
     {
-
-
         public static byte[] GenerateRandomIV()
         {
             using (Aes aes = Aes.Create())
@@ -30,6 +28,5 @@ namespace password_manager
             Console.WriteLine();
 
         }
-        //test 
     }
 }

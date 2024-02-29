@@ -29,13 +29,14 @@ namespace password_manager
 
                 // Deserialisera JSON-strängen till en Dictionary<string, string>
                 Dictionary<string, string> clientData = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
                 // Kontrollera om deserialiseringen var framgångsrik
                 if (clientData != null)
                 {
                     // Skriv ut varje par (nyckel, värde) i klientdata
                     foreach (var kvp in clientData)
                     {
-                        Console.WriteLine($"Nyckel: {kvp.Key}, Värde: {kvp.Value}");
+                        Console.WriteLine($"{kvp.Key},{kvp.Value}");
                     }
                 }
                 else
