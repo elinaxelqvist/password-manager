@@ -32,44 +32,18 @@ namespace password_manager
 
         public void SaveSecretKeyToFile(string filePath, string secretKey)
         {
-            Dictionary<string, string> userSecretKeys = LoadUserSecrets(filePath);
-
-            string key = "Secret Key";
+            // Skapa ett dictionary för att lagra key-value-par
+            Dictionary<string, string> userSecretKeys = new Dictionary<string, string>();
 
             // Lägg till eller uppdatera användarens hemliga nyckel
+            userSecretKeys["SecretKey"] = secretKey;
 
-                userSecretKeys.Add(key, secretKey);
+            // Konvertera dictionary till JSON-sträng
+            string updatedJson = JsonSerializer.Serialize(userSecretKeys, new JsonSerializerOptions { WriteIndented = true });
 
-                // Konvertera dictionary till JSON-sträng
-                string updatedJson = JsonSerializer.Serialize(userSecretKeys, new JsonSerializerOptions { WriteIndented = true });
-
-                // Skriv JSON-strängen till filen
-                File.WriteAllText(filePath, updatedJson);
+            // Skriv JSON-strängen till filen
+            File.WriteAllText(filePath, updatedJson);
         }
 
-
-
-
-
-        private Dictionary<string, string> LoadUserSecrets(string filePath)
-        {
-            // Kontrollera om filen finns
-            if (File.Exists(filePath))
-            {
-                // Läs in befintliga användare och deras hemliga nycklar från filen
-                string existingJson = File.ReadAllText(filePath);
-
-                // Kontrollera om JSON-strängen är tom
-                if (!string.IsNullOrEmpty(existingJson))
-                {
-                    return JsonSerializer.Deserialize<Dictionary<string, string>>(existingJson) ?? new Dictionary<string, string>();
-                }
-            }
-
-            // Returnera en ny dictionary om filen inte finns eller är tom
-            return new Dictionary<string, string>();
-        }
     }
-
-}
 

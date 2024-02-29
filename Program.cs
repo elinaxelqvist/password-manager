@@ -29,10 +29,8 @@ namespace password_manager
                             ManageFiles.CreateOrOverwriteServerFile(serverFilePath);
 
                             Console.WriteLine($"Klient-filen '{clientFilePath}' och server-filen '{serverFilePath}' har skapats eller skrivits över.");
-                            Console.WriteLine($"Secret Key har sparats i '{clientFilePath}'.");
-                            Console.WriteLine($"IV har sparats i '{serverFilePath}'.");
-                            Console.WriteLine("Här är din hemliga nyckel: ");
-                            Command.SecretCommand(args);
+
+
                         }
 
                         else
