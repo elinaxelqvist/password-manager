@@ -20,6 +20,28 @@ namespace password_manager
 
                         //kod som anopas om första ordet är init
 
+                        if (args.Length == 2)
+                        {
+                            if (!File.Exists(args[1]) || !File.Exists(args[2]))
+                            {
+
+                            }
+                            else if (File.Exists(args[1]))
+                            {
+
+                            }
+                            else if (!File.Exists(args[2]))
+                            {
+
+                            }
+                        }
+
+
+
+                        
+
+
+
                         break;
 
                     case "create":
