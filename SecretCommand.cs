@@ -10,16 +10,16 @@ namespace password_manager
     public class Command 
 
     {
-        public static void CommandType(string input)
-        {
-            string[] words= input.Split(' ');
+    //   // public static void CommandType(string input)
+    //    {
+    //      string[] words= input.Split(' ');
 
-            if (words[0]== "secret")
-            {
-                SecretCommand(words);
-            } 
+    //        if (words[0]== "secret")
+    //        {
+    //            SecretCommand(words);
+    //        } 
             
-        }
+        
 
         public static void SecretCommand(string[] input)
         {

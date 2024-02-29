@@ -12,11 +12,11 @@ namespace password_manager
 
         static void Main(string[] args)
         {
-            
-            if(args.Length > 0) 
+
+            if (args.Length > 0)
             {
-            
-            string command = args[0];
+
+                string command = args[0];
 
                 switch (command)
                 {
@@ -50,29 +50,27 @@ namespace password_manager
 
                     case "secret":
 
-
                         //kod som anropas om första ordet är secret
-
-
-
-
+                        Command.SecretCommand(args);
                         break;
+
 
                     default:
                         Console.WriteLine("Ogiltigt kommande");
                         break;
-                      } 
-
-
-               
-                else
-                {
-                    Console.WriteLine("Inget kommando angivet")
                 }
+            }
+
+
+
+            else
+            {
+                Console.WriteLine("Inget kommando angivet");
+            }
                 
             
             
-            }
+            
             
             
             
