@@ -25,16 +25,26 @@ namespace password_manager
                             if (!File.Exists(args[1]) || !File.Exists(args[2]))
                             {
 
+                                // Lagra filvägar baserat på de angivna argumenten
+                                string clientFilePath = args[1];
+                                string serverFilePath = args[2];
+
+                                // Skapa filerna
+                                CreateFileIfNotExists(clientFilePath);
+                                CreateFileIfNotExists(serverFilePath);
                             }
                             else if (File.Exists(args[1]))
                             {
+                                Console.WriteLine("Namnet för klient-filen " + args[1] + " finns redan, ange ett annat.");
+
 
                             }
                             else if (!File.Exists(args[2]))
                             {
-
+                                Console.WriteLine("Namnet för klient-filen " + args[2] + " finns redan, ange ett annat.");
                             }
                         }
+                        
 
 
 
@@ -100,14 +110,7 @@ namespace password_manager
 
 
 
-            // Lagra filvägar baserat på de angivna argumenten
-            string clientFilePath = args[0];
-            string serverFilePath = args[1];
-
-            // Skapa filerna
-            CreateFileIfNotExists(clientFilePath);
-            CreateFileIfNotExists(serverFilePath);
-
+            
             //Användaren får skriva in sitt användarnamn
             Console.WriteLine("Skriv ditt användarnamn");
             string user = Console.ReadLine();
