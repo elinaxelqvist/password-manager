@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Security.Cryptography;
+using System.ComponentModel.Design;
 
 namespace password_manager
 {
@@ -11,12 +12,77 @@ namespace password_manager
 
         static void Main(string[] args)
         {
-            // Kontrollera att användaren har angett rätt antal argument
-            if (args.Length < 2)
+            
+            if(args.Length > 0) 
             {
-                Console.WriteLine("Användning: <program> <clientfilväg> <serverfilväg>");
-                return;
+            
+            string command = args[0];
+
+                switch (command)
+                {
+                    case "init":
+
+                        //kod som anopas om första ordet är init
+
+                        break;
+
+                    case "create":
+
+                        //kod som anropas om första ordet är create
+
+                        break;
+
+                    case "get":
+                        //kod som anropas om första ordet är get
+                        break;
+
+                    case "set":
+
+                        //kod som anropas om första ordet är set
+
+                        break;
+
+                    case "delete":
+
+                        //kod som anropas om första ordet är delete
+
+                        break;
+
+                    case "secret":
+
+
+                        //kod som anropas om första ordet är secret
+
+
+
+
+                        break;
+
+                    default:
+                        Console.WriteLine("Ogiltigt kommande");
+                        break;
+                      } 
+
+
+               
+                else
+                {
+                    Console.WriteLine("Inget kommando angivet")
+                }
+                
+            
+            
             }
+            
+            
+            
+            
+            // Kontrollera att användaren har angett rätt antal argument
+            //if (args.Length < 2)
+            //{
+               // Console.WriteLine("Användning: <program> <clientfilväg> <serverfilväg>");
+               // return;
+           // }
 
 
 
