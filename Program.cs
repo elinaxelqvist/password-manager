@@ -17,42 +17,25 @@ namespace password_manager
                 switch (command)
                 {
                     case "init":
-
-                        //kod som anopas om första ordet är init
-
+                        // Kontrollera att vi har rätt antal argument
                         if (args.Length == 2)
                         {
-                            if (!File.Exists(args[1]) || !File.Exists(args[2]))
-                            {
+                            // Vi antar att både klient- och serverfilens sökvägar tillhandahålls
+                            string clientFilePath = args[1];
+                            string serverFilePath = args[2];
 
-                                // Lagra filvägar baserat på de angivna argumenten
-                                string clientFilePath = args[1];
-                                string serverFilePath = args[2];
+                            // Skapar eller skriver över filer direkt
+                            ManageFiles.CreateOrOverwriteFile(clientFilePath);
+                            ManageFiles.CreateOrOverwriteFile(serverFilePath);
 
-                                // Skapa filerna
-                                CreateFileIfNotExists(clientFilePath);
-                                CreateFileIfNotExists(serverFilePath);
-                            }
-                            else if (File.Exists(args[1]))
-                            {
-                                Console.WriteLine("Namnet för klient-filen " + args[1] + " finns redan, ange ett annat.");
-
-
-                            }
-                            else if (!File.Exists(args[2]))
-                            {
-                                Console.WriteLine("Namnet för klient-filen " + args[2] + " finns redan, ange ett annat.");
-                            }
+                            Console.WriteLine($"Klient-filen '{clientFilePath}' och server-filen '{serverFilePath}' har skapats eller skrivits över.");
                         }
-                        
-
-
-
-                        
-
-
-
+                        else
+                        {
+                            Console.WriteLine("Fel antal argument. Använd: init <klientfilens sökväg> <serverfilens sökväg>");
+                        }
                         break;
+
 
                     case "create":
 
@@ -94,27 +77,6 @@ namespace password_manager
                 Console.WriteLine("Inget kommando angivet");
             }
                 
-            
-            
-            
-            
-            
-            
-            
-            // Kontrollera att användaren har angett rätt antal argument
-            //if (args.Length < 2)
-            //{
-               // Console.WriteLine("Användning: <program> <clientfilväg> <serverfilväg>");
-               // return;
-           // }
-
-
-
-            
-            //Användaren får skriva in sitt användarnamn
-            Console.WriteLine("Skriv ditt användarnamn");
-            string user = Console.ReadLine();
-
 
             //Instansierar ett objekt av klassen SecretKey så vi kan använda metoderna där
 
@@ -124,11 +86,9 @@ namespace password_manager
             string secretKey = secretKeyHandler.GenerateSecretKey();
 
 
-            
-
 
             //Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen, user och byte arrayen 
-            secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
+            //secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
 
             //Anropar slumpmässig initieringvektor
             byte[] iv = Aes_Kryptering.GenerateRandomIV();
@@ -139,13 +99,8 @@ namespace password_manager
             Console.WriteLine("Skapa ett lösenord");
             string masterPassword = Console.ReadLine();
 
-            
-
 
             Console.WriteLine("Det här är din hemliga nyckel. Kom ihåg den: " + secretKey);
-
-            
-
 
 
             VaultKeyGenerator generator = new VaultKeyGenerator(secretKey);
@@ -153,7 +108,9 @@ namespace password_manager
 
             Console.WriteLine("Valvnyckel genererad: " + Convert.ToBase64String(vaultKey));
 
-            // Användning av ServerFileStructure-metoden för att skapa en serverfilstruktur
+
+
+            /* Användning av ServerFileStructure-metoden för att skapa en serverfilstruktur
 
 
             string stringIV = Convert.ToBase64String(iv);
@@ -170,28 +127,8 @@ namespace password_manager
 
 
             Console.WriteLine("Skriv in det kommando du vill göra");
-            string input=Console.ReadLine();
-
-
-            
-        }
-
-        static void CreateFileIfNotExists(string filePath)
-        {
-            // Kontrollera om filen redan finns
-            if (!File.Exists(filePath))
-            {
-                // Skapa filen
-                using (var stream = File.Create(filePath))
-                {
-                    // Filen har skapats, du kan initialisera den här om nödvändigt
-                    Console.WriteLine($"Filen skapades: {filePath}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Filen finns redan: {filePath}");
-            }
+            string input=Console.ReadLine();*/
+  
         }
     }
 }
