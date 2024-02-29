@@ -8,14 +8,10 @@ namespace password_manager
 {
     class Program
     {
-
-
         static void Main(string[] args)
         {
-
             if (args.Length > 0)
             {
-
                 string command = args[0];
 
                 switch (command)
@@ -54,13 +50,11 @@ namespace password_manager
                         Command.SecretCommand(args);
                         break;
 
-
                     default:
                         Console.WriteLine("Ogiltigt kommande");
                         break;
                 }
             }
-
 
 
             else
@@ -154,7 +148,7 @@ namespace password_manager
             string input=Console.ReadLine();
 
 
-            Command.CommandType(input);
+            
         }
 
         static void CreateFileIfNotExists(string filePath)
