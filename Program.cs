@@ -31,6 +31,26 @@ namespace password_manager
                             Console.WriteLine($"Klient-filen '{clientFilePath}' och server-filen '{serverFilePath}' har skapats eller skrivits över.");
 
 
+                            //hämtar secret key och skriver ut i terminalen
+                            string secretKey= File.ReadAllText(clientFilePath);
+
+                            Console.WriteLine("Här är din hemliga nyckel. Skriv ned det och kom ihåg det");
+                            Console.WriteLine(secretKey);
+
+
+                            //användaren får skapa master password
+                            Console.WriteLine("Skapa ett lösenord");
+                            string masterPassword = Console.ReadLine();
+
+
+
+
+
+
+
+
+
+
                         }
 
                         else
@@ -90,8 +110,7 @@ namespace password_manager
             Aes_Kryptering.PrintByteArray(iv);
 
 
-            Console.WriteLine("Skapa ett lösenord");
-            string masterPassword = Console.ReadLine();
+            
 
 
             Console.WriteLine("Det här är din hemliga nyckel. Kom ihåg den: " + secretKey);

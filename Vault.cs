@@ -27,6 +27,9 @@ namespace password_manager
             // Valvet krypteras med aes objektet
             string encryptedVault = EncryptVault(uncryptedVault, aes);
 
+
+
+
             // IV och det krypterade valvet sparas/lagras i filen
 
             // Konvertera IV till en Base64-sträng

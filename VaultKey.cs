@@ -9,12 +9,7 @@ namespace password_manager
 {
     public class VaultKeyGenerator
     {
-        private string secretKey;
-
-        public VaultKeyGenerator(string secretKey)
-        {
-            this.secretKey = secretKey;
-        }
+        
 
         public byte[] GenerateVaultKey(string masterPassword, string secretKey)
         {
