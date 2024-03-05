@@ -234,7 +234,7 @@ Vault.ServerFileStructure(serverFilePath,stringIV,prop, password);
 Console.WriteLine("Skriv in det kommando du vill göra");
 string input=Console.ReadLine();*/
 
-//funkar det??
+//funkar det???
 
 
 
