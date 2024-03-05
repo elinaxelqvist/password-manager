@@ -132,7 +132,71 @@ namespace password_manager
                         //kod som anropas om första ordet är get
                         break;
 
+
                     case "set":
+                        if (args.Length == 4 || args.Length == 5)
+                        {
+                            string clientFilePath = args[1];
+                            string serverFilePath = args[2];
+                            string propertyKey = args[3];
+
+                            bool generatePassword = args.Length == 5 && (args[4] == "-g" || args[4] == "--generate");
+
+                            try
+                            {
+                                // Användaren får ange masterlösenord
+                                string masterPassword = MasterPassword();
+
+                                // Användaren får ange hemlig nyckel
+                                Console.WriteLine("Ange din hemliga nyckel");
+                                string secretKey = Console.ReadLine();
+
+                                // Generera valvnyckel
+                                byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
+
+                                // Läs in initieringsvektorn från serverfilen
+                                string serverFileContents = File.ReadAllText(serverFilePath);
+                                Dictionary<string, string> serverFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(serverFileContents);
+
+                                string ivValue = serverFileDict["IV"];
+                                string encryptedData = serverFileDict["EncryptedVault"];
+
+
+
+                              
+                                // Dekryptera det befintliga valvet från serverfilen
+                                Dictionary<string, string> uncryptedVault = Vault.DecryptVault(serverFileDict["EncryptedVault"], aes);
+
+
+                                // Läs det befintliga lösenordet från det dekrypterade valvet
+                                string existingPassword = uncryptedVault.ContainsKey(propertyKey) ? uncryptedVault[propertyKey] : null;
+
+                                // Generera ett nytt lösenord antingen genom användaringång eller slumpmässigt
+                                string newPassword = generatePassword ? GenerateRandomPassword() : GetUserInputPassword();
+
+                                // Sätt det nya lösenordet för den angivna egenskapen i valvet
+                                uncryptedVault[propertyKey] = newPassword;
+
+                                // Skapa ett AES-objekt
+                                Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, Convert.FromBase64String(ivValue));
+
+                                // Kryptera hela valvet och spara tillbaka till serverfilen
+                                string encryptedVault = Vault.EncryptVault(uncryptedVault, aes);
+                                serverFileDict["EncryptedVault"] = encryptedVault;
+                                File.WriteAllText(serverFilePath, JsonSerializer.Serialize(serverFileDict));
+
+                                Console.WriteLine($"Lösenord för egenskapen {propertyKey} har lagts till/uppdaterats i valvet.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ett fel inträffade: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Felaktigt antal argument.");
+                        }
+
 
                         //kod som anropas om första ordet är set
 
@@ -188,6 +252,35 @@ namespace password_manager
                 }
             }
         }
+
+        public static string GenerateRandomPassword()
+        {
+            // Här kan du implementera logiken för att generera ett slumpmässigt lösenord
+            // till exempel en alfanumerisk sträng med 20 tecken.
+
+            const string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            Random random = new Random();
+
+            // Skapa en slumpmässig sträng med 20 tecken från allowedChars
+            string randomPassword = new string(Enumerable.Repeat(allowedChars, 20)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            Console.WriteLine($"Slumpmässigt lösenord genererat: {randomPassword}");
+
+            return randomPassword;
+        }
+
+        public static string GetUserInputPassword()
+        {
+            // Här kan du implementera logiken för att få inmatning från användaren
+            // för att skapa ett lösenord.
+
+            Console.WriteLine("Ange det önskade lösenordet:");
+            string userInputPassword = Console.ReadLine();
+
+            return userInputPassword;
+        }
+
     }
 }
 
