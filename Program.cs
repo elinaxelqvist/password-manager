@@ -60,31 +60,49 @@ namespace password_manager
                     case "create":
                         if (args.Length == 3)
                         {
+
+                            //Lagrar argumenten för klientfil och serverfil
                             string clientFilePath = args[1];
                             string serverFilePath = args[2];
 
+
+                            // Användaren får ange sitt master password
                             string masterPassword = MasterPassword();
 
+
+                            //Användaren får ange sin hemliga nyckel 
                             Console.WriteLine("Ange din hemliga nyckel");
                             string secretKey = Console.ReadLine();
 
+                            //Metoden som genererar valvnyckeln anropas
                             byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
 
                             try
-                            {
+                            { 
                                 string serverFileContents = File.ReadAllText(serverFilePath);
                                 Dictionary<string, string> serverFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(serverFileContents);
 
+                                //Hämtar ut värdena som finns för IV och EncryptedVault i serverfilen
                                 string ivValue = serverFileDict["IV"];
                                 string encryptedData = serverFileDict["EncryptedVault"];
 
+                                //Omvandlar iv till en byte[] 
                                 byte[] iv = Convert.FromBase64String(ivValue);
+
+                                //Skapar ett aes-objekt utifrån vaultKey och iv
                                 Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
 
-                                if (Vault.CanDecryptVault(encryptedData, aes))
+                                
+                                if (Vault.CanDecryptVault(encryptedData, aes))      
+
                                 {
+
+                                    //Om valvet kunde krypteras med aes-objektet, skapas en ny klientfil där samma secretKey läggs in
+
                                     ManageFiles.CreateNewClientFile(clientFilePath, secretKey);
                                     Console.WriteLine("Det har skapats en ny klient-fil med ditt secret-key");
+
+
                                 }
                                 else
                                 {
