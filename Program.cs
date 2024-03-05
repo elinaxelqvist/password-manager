@@ -96,12 +96,10 @@ namespace password_manager
                                 if (Vault.CanDecryptVault(encryptedData, aes))      
 
                                 {
-
                                     //Om valvet kunde krypteras med aes-objektet, skapas en ny klientfil där samma secretKey läggs in
 
                                     ManageFiles.CreateNewClientFile(clientFilePath, secretKey);
                                     Console.WriteLine("Det har skapats en ny klient-fil med ditt secret-key");
-
 
                                 }
                                 else
@@ -160,14 +158,11 @@ namespace password_manager
                         break;
                 }
             }
-
-
             else
             {
                 Console.WriteLine("Inget kommando angivet");
             }
         }
-
         public static string MasterPassword()
         {
             while (true) // Loopa tills ett giltigt lösenord har matats in
