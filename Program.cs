@@ -17,6 +17,7 @@ namespace password_manager
                 switch (command)
                 {
                     case "init":
+
                         // Kontrollera att vi har rätt antal argument
                         if (args.Length == 3)
                         {
@@ -32,15 +33,14 @@ namespace password_manager
 
 
                             //hämtar secret key och skriver ut i terminalen
-                            string secretKey= File.ReadAllText(clientFilePath);
+                            string secretKey = File.ReadAllText(clientFilePath);
 
                             Console.WriteLine("Här är din hemliga nyckel. Skriv ned det och kom ihåg det");
                             Console.WriteLine(secretKey);
 
 
                             //användaren får skapa master password
-                            Console.WriteLine("Skapa ett lösenord");
-                            string masterPassword = Console.ReadLine();
+                            string masterPassword = MasterPassword();
 
                             //Skapa valvnyckeln
 
@@ -50,15 +50,6 @@ namespace password_manager
 
                             Vault.ServerFileStructure(serverFilePath, vaultKey);
 
-
-
-
-
-
-
-
-
-
                         }
 
                         else
@@ -66,7 +57,6 @@ namespace password_manager
                             Console.WriteLine("Fel antal argument. Använd: init <klientfilens sökväg> <serverfilens sökväg>");
                         }
                         break;
-
 
                     case "create":
 
@@ -107,52 +97,72 @@ namespace password_manager
             {
                 Console.WriteLine("Inget kommando angivet");
             }
-                
+        }
 
-            /*//Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen, user och byte arrayen 
-            //secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
+        public static string MasterPassword()
+        {
+            while (true) // Loopa tills ett giltigt lösenord har matats in
+            {
+                Console.WriteLine("Skapa ditt master lösenord med minst 8 tecken.");
+                string input = Console.ReadLine();
 
-            //Anropar slumpmässig initieringvektor
-            byte[] iv = Aes_Kryptering.GenerateRandomIV();
-
-            Aes_Kryptering.PrintByteArray(iv);
-
-
-            
-
-
-            Console.WriteLine("Det här är din hemliga nyckel. Kom ihåg den: " + secretKey);
-
-
-            VaultKeyGenerator generator = new VaultKeyGenerator(secretKey);
-            byte[] vaultKey = generator.GenerateVaultKey(masterPassword, secretKey);
-
-            Console.WriteLine("Valvnyckel genererad: " + Convert.ToBase64String(vaultKey));
-
-
-
-            //Användning av ServerFileStructure-metoden för att skapa en serverfilstruktur
-
-
-            string stringIV = Convert.ToBase64String(iv);
-
-            Console.WriteLine("Skriv in prop");
-            string prop = Console.ReadLine();
-
-            Console.WriteLine("Skriv lösenordet du vill lagra i valvet:");
-            string password= Console.ReadLine();
-
-            
-
-           Vault.ServerFileStructure(serverFilePath,stringIV,prop, password);
-
-
-            Console.WriteLine("Skriv in det kommando du vill göra");
-            string input=Console.ReadLine();*/
-
-            //funkar det??
+                if (input.Length >= 8)
+                {
+                    return input; // Returnera det godkända lösenordet
+                }
+                else
+                {
+                    Console.WriteLine("Lösenordet är för kort, försök igen.");
+                }
+            }
         }
     }
 }
 
-    
+
+
+/*//Vi anropar metoden SaveSecretKeyToFile och skickar in namnet på klientfilen, user och byte arrayen 
+//secretKeyHandler.SaveSecretKeyToFile(clientFilePath, user, secretKey);
+
+//Anropar slumpmässig initieringvektor
+byte[] iv = Aes_Kryptering.GenerateRandomIV();
+
+Aes_Kryptering.PrintByteArray(iv);
+
+
+
+
+
+Console.WriteLine("Det här är din hemliga nyckel. Kom ihåg den: " + secretKey);
+
+
+VaultKeyGenerator generator = new VaultKeyGenerator(secretKey);
+byte[] vaultKey = generator.GenerateVaultKey(masterPassword, secretKey);
+
+Console.WriteLine("Valvnyckel genererad: " + Convert.ToBase64String(vaultKey));
+
+
+
+//Användning av ServerFileStructure-metoden för att skapa en serverfilstruktur
+
+
+string stringIV = Convert.ToBase64String(iv);
+
+Console.WriteLine("Skriv in prop");
+string prop = Console.ReadLine();
+
+Console.WriteLine("Skriv lösenordet du vill lagra i valvet:");
+string password= Console.ReadLine();
+
+
+
+Vault.ServerFileStructure(serverFilePath,stringIV,prop, password);
+
+
+Console.WriteLine("Skriv in det kommando du vill göra");
+string input=Console.ReadLine();*/
+
+//funkar det??
+
+
+
