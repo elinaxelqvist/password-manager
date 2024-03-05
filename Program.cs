@@ -51,7 +51,6 @@ namespace password_manager
                             Vault.ServerFileStructure(serverFilePath, vaultKey);
 
                         }
-
                         else
                         {
                             Console.WriteLine("Fel antal argument. Använd: init <klientfilens sökväg> <serverfilens sökväg>");
@@ -70,14 +69,10 @@ namespace password_manager
 
                             Console.WriteLine("Skriv din hemliga nyckel");
                             string secretKey = Console.ReadLine();
-
-
+                            
                             byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
 
                             string serverFile= File.ReadAllText(clientFilePath);
-
-
-
 
 
                             Aes aes = Aes_Kryptering.CreateAesObject(vaultKey,);
@@ -94,7 +89,6 @@ namespace password_manager
 
 
                         }
-                            
 
                             break;
 
@@ -117,6 +111,10 @@ namespace password_manager
                     case "secret":
 
                         //kod som anropas om första ordet är secret
+
+
+                        // vi måste ändra här, det ska ta emot secret <client> 
+
                         Command.SecretCommand(args);
                         break;
 
