@@ -27,9 +27,6 @@ namespace password_manager
         }
 
 
-
-
-
         public void SaveSecretKeyToFile(string filePath, string secretKey)
         {
             // Skapa ett dictionary för att lagra key-value-par

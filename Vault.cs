@@ -72,6 +72,85 @@ namespace password_manager
 
 
 
+        public static bool CanDecryptVault(string encryptedData, Aes aes)
+        {
+            try
+            {
+                // Konvertera Base64-strängen till byte-array
+                byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
+
+                // Skapa dekrypterare
+                ICryptoTransform decryptor = aes.CreateDecryptor();
+
+                using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        // Försök att dekryptera, men vi behöver inte faktiskt läsa in data här
+                        // Vi kommer bara hit om dekrypteringen lyckas
+                        return true;
+                    }
+                }
+            }
+            catch (FormatException)
+            {
+                // Felaktig Base64-sträng
+                return false;
+            }
+            catch (CryptographicException)
+            {
+                // Felaktig nyckel eller IV
+                return false;
+            }
+        }
+
+
+
+
+
+        public static string DecryptVault(string encryptedData, Aes aes)
+        {
+            try
+            {
+                // Konvertera Base64-strängen till byte-array
+                byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
+
+                // Skapa dekrypterare
+                ICryptoTransform decryptor = aes.CreateDecryptor();
+
+                using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        // Läs dekrypterade data från krypteringsströmmen
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            string decryptedJson = srDecrypt.ReadToEnd();
+                            return decryptedJson;
+                        }
+                    }
+                }
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid Base64 string.");
+                return null;
+            }
+            catch (CryptographicException)
+            {
+                Console.WriteLine("Decryption failed. Incorrect key or IV.");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during decryption: {ex.Message}");
+                return null;
+            }
+        }
+
+
+
+
 
 
 

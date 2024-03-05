@@ -61,8 +61,42 @@ namespace password_manager
                     case "create":
 
                         //kod som anropas om första ordet är create
+                        if (args.Length == 3)
+                        {
+                            string clientFilePath = args[1];
+                            string serverFilePath = args[2]; 
 
-                        break;
+                            string masterPassword= MasterPassword();
+
+                            Console.WriteLine("Skriv din hemliga nyckel");
+                            string secretKey = Console.ReadLine();
+
+
+                            byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
+
+                            string serverFile= File.ReadAllText(clientFilePath);
+
+
+
+
+
+                            Aes aes = Aes_Kryptering.CreateAesObject(vaultKey,);
+
+                            if(Vault.CanDecryptVault(    ,aes)== true)
+                            {
+                                
+                            }
+                            else
+                            {
+
+                            }
+
+
+
+                        }
+                            
+
+                            break;
 
                     case "get":
                         //kod som anropas om första ordet är get
@@ -103,7 +137,7 @@ namespace password_manager
         {
             while (true) // Loopa tills ett giltigt lösenord har matats in
             {
-                Console.WriteLine("Skapa ditt master lösenord med minst 8 tecken.");
+                Console.WriteLine("Skapa/ange ditt master lösenord med minst 8 tecken.");
                 string input = Console.ReadLine();
 
                 if (input.Length >= 8)

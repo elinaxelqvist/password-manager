@@ -29,8 +29,6 @@ namespace password_manager
 
         }
 
-
-
         public static Aes CreateAesObject(byte[] vaultKey, byte[] iv)
         {
             Aes aes = Aes.Create();
