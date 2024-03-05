@@ -21,10 +21,10 @@ namespace password_manager
             // AES-objektet skapas
             Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
 
-            // Okrypterade valvet skapas (för illustrationens skull)
+            // Okrypterade valvet skapas 
             Dictionary<string, string> uncryptedVault = new Dictionary<string, string>();
 
-            // Valvet krypteras
+            // Valvet krypteras med aes objektet
             string encryptedVault = EncryptVault(uncryptedVault, aes);
 
             // IV och det krypterade valvet sparas/lagras i filen
