@@ -10,12 +10,26 @@ namespace password_manager
     public class Vault
     {
 
-        public static Dictionary<string,string> CreateVault()
+        public static string EncryptVault(Dictionary<string, string> uncryptedVault, Aes aes)
         {
-            Dictionary<string, string> uncryptedVault = new Dictionary<string, string>();
-            return uncryptedVault;
+            // Konvertera Dictionary till JSON-sträng
+            string json = JsonSerializer.Serialize(uncryptedVault);
 
+            // Skapa krypterare
+            ICryptoTransform encryptor = aes.CreateEncryptor();
 
+            using (MemoryStream msEncrypt = new MemoryStream())
+            {
+                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                {
+                    // Konvertera JSON-sträng till byte-array och skriv till krypteringsströmmen
+                    byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+                    csEncrypt.Write(jsonBytes, 0, jsonBytes.Length);
+                }
+
+                // Returnera det krypterade byte-arrayet som Base64-sträng
+                return Convert.ToBase64String(msEncrypt.ToArray());
+            }
         }
 
 
@@ -26,95 +40,96 @@ namespace password_manager
 
 
 
-    //    public static void ServerFileStructure(string filePath, string vaultIV, string prop, string password)
-    //    {
-    //        // Generera en ny initieringsvektor för varje inmatning i valvet
-    //        byte[] ivBytes = Convert.FromBase64String(vaultIV);
 
-    //        VaultData vaultData = new VaultData();
+        //    public static void ServerFileStructure(string filePath, string vaultIV, string prop, string password)
+        //    {
+        //        // Generera en ny initieringsvektor för varje inmatning i valvet
+        //        byte[] ivBytes = Convert.FromBase64String(vaultIV);
 
-    //        // Kontrollera om filen redan finns
-    //        if (File.Exists(filePath))
-    //        {
-    //            // Läs innehållet från filen, dekryptera det och deserialisera det till VaultData
-    //            string encryptedJson = File.ReadAllText(filePath);
-    //            if (!string.IsNullOrEmpty(encryptedJson))
-    //            {
-    //                string decryptedJson = DecryptData(encryptedJson, ivBytes);
-    //                vaultData = JsonSerializer.Deserialize<VaultData>(decryptedJson);
-    //            }
-    //        }
+        //        VaultData vaultData = new VaultData();
 
-    //        // Lägg till nytt (prop, password)-par
-    //        vaultData.Entries.Add(new VaultEntry { Prop = prop, Password = password });
+        //        // Kontrollera om filen redan finns
+        //        if (File.Exists(filePath))
+        //        {
+        //            // Läs innehållet från filen, dekryptera det och deserialisera det till VaultData
+        //            string encryptedJson = File.ReadAllText(filePath);
+        //            if (!string.IsNullOrEmpty(encryptedJson))
+        //            {
+        //                string decryptedJson = DecryptData(encryptedJson, ivBytes);
+        //                vaultData = JsonSerializer.Deserialize<VaultData>(decryptedJson);
+        //            }
+        //        }
 
-    //        // Konvertera till JSON-sträng, kryptera och spara i filen
-    //        string jsonOutput = JsonSerializer.Serialize(vaultData, new JsonSerializerOptions { WriteIndented = true });
-    //        string encryptedOutput = EncryptData(jsonOutput, ivBytes);
-    //        File.WriteAllText(filePath, encryptedOutput);
+        //        // Lägg till nytt (prop, password)-par
+        //        vaultData.Entries.Add(new VaultEntry { Prop = prop, Password = password });
 
-    //        Console.WriteLine("Lösenord tillagt i serverfilen.");
-    //    }
+        //        // Konvertera till JSON-sträng, kryptera och spara i filen
+        //        string jsonOutput = JsonSerializer.Serialize(vaultData, new JsonSerializerOptions { WriteIndented = true });
+        //        string encryptedOutput = EncryptData(jsonOutput, ivBytes);
+        //        File.WriteAllText(filePath, encryptedOutput);
 
-    //    private static string EncryptData(string data, byte[] iv)
-    //    {
-    //        using (Aes aesAlg = Aes.Create())
-    //        {
-    //            aesAlg.IV = iv;
+        //        Console.WriteLine("Lösenord tillagt i serverfilen.");
+        //    }
 
-    //            // Använd en nyckel och IV för att kryptera data
-    //            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+        //    private static string EncryptData(string data, byte[] iv)
+        //    {
+        //        using (Aes aesAlg = Aes.Create())
+        //        {
+        //            aesAlg.IV = iv;
 
-    //            using (MemoryStream msEncrypt = new MemoryStream())
-    //            {
-    //                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-    //                {
-    //                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-    //                    {
-    //                        swEncrypt.Write(data);
-    //                    }
-    //                }
-    //                return Convert.ToBase64String(msEncrypt.ToArray());
-    //            }
-    //        }
-    //    }
+        //            // Använd en nyckel och IV för att kryptera data
+        //            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-    //    private static string DecryptData(string encryptedData, byte[] iv)
-    //    {
-    //        using (Aes aesAlg = Aes.Create())
-    //        {
-    //            aesAlg.IV = iv;
+        //            using (MemoryStream msEncrypt = new MemoryStream())
+        //            {
+        //                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+        //                {
+        //                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+        //                    {
+        //                        swEncrypt.Write(data);
+        //                    }
+        //                }
+        //                return Convert.ToBase64String(msEncrypt.ToArray());
+        //            }
+        //        }
+        //    }
 
-    //            // Använd en nyckel och IV för att dekryptera data
-    //            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+        //    private static string DecryptData(string encryptedData, byte[] iv)
+        //    {
+        //        using (Aes aesAlg = Aes.Create())
+        //        {
+        //            aesAlg.IV = iv;
 
-    //            using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(encryptedData)))
-    //            {
-    //                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-    //                {
-    //                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-    //                    {
-    //                        return srDecrypt.ReadToEnd();
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+        //            // Använd en nyckel och IV för att dekryptera data
+        //            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-    //// En klass för att representera hela valvet
-    //public class VaultData
-    //{
-    //    public List<VaultEntry> Entries { get; set; } = new List<VaultEntry>();
-    //}
+        //            using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(encryptedData)))
+        //            {
+        //                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+        //                {
+        //                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+        //                    {
+        //                        return srDecrypt.ReadToEnd();
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
-    //// En klass för att representera varje inmatning i valvet
-    //public class VaultEntry
-    //{
-    //    public string Prop { get; set; }
-    //    public string Password { get; set; }
-    //}
-}
+        //// En klass för att representera hela valvet
+        //public class VaultData
+        //{
+        //    public List<VaultEntry> Entries { get; set; } = new List<VaultEntry>();
+        //}
+
+        //// En klass för att representera varje inmatning i valvet
+        //public class VaultEntry
+        //{
+        //    public string Prop { get; set; }
+        //    public string Password { get; set; }
+        //}
+    }
 
 
 

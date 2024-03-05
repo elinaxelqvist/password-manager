@@ -28,5 +28,16 @@ namespace password_manager
             Console.WriteLine();
 
         }
+
+
+
+        public static Aes CreateAesObject(byte[] vaultKey, byte[] iv)
+        {
+            Aes aes = Aes.Create();
+            aes.Key = vaultKey;
+            aes.IV = iv;
+
+            return aes;
+        }
     }
 }
