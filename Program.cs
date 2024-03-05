@@ -42,6 +42,14 @@ namespace password_manager
                             Console.WriteLine("Skapa ett lösenord");
                             string masterPassword = Console.ReadLine();
 
+                            //Skapa valvnyckeln
+
+                            byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
+
+                            //Skapa aes, valv, kryptera valvet, spara iv och det krypterade valvet i serverfil
+
+                            Vault.ServerFileStructure(serverFilePath, vaultKey);
+
 
 
 

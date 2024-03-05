@@ -11,7 +11,7 @@ namespace password_manager
     {
         
 
-        public byte[] GenerateVaultKey(string masterPassword, string secretKey)
+        public static byte[] GenerateVaultKey(string masterPassword, string secretKey)
         {
             byte[] secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
             byte[] masterPasswordBytes = Encoding.UTF8.GetBytes(masterPassword);
