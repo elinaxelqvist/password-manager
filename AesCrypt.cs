@@ -9,6 +9,8 @@ namespace password_manager
 {
     public class Aes_Kryptering
     {
+
+        //Metod som skapar en random IV byte array
         public static byte[] GenerateRandomIV()
         {
             using (Aes aes = Aes.Create())
@@ -18,6 +20,8 @@ namespace password_manager
             }
         }
 
+        
+        //osäker om vi använder denna längre?
         public static void PrintByteArray(byte[] bytes)
         {
             foreach (byte b in bytes)
@@ -29,6 +33,7 @@ namespace password_manager
 
         }
 
+        // Metod som skapar ett aes-objekt utifrån vaultkey och iv
         public static Aes CreateAesObject(byte[] vaultKey, byte[] iv)
         {
             Aes aes = Aes.Create();

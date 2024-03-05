@@ -8,6 +8,8 @@ namespace password_manager
 {
     public class SecretKey
     {
+
+        //Metod som genererar en Secret Key
         public static string GenerateSecretKey()
         {
             // Skapa en byte-array för att lagra den hemliga nyckeln
@@ -27,6 +29,7 @@ namespace password_manager
         }
 
 
+        //Metod som skapar strukturen för en ny klient-fil, och lagrar secretKey i den
         public static void SaveSecretKeyToFile(string filePath, string secretKey)
         {
             // Skapa ett dictionary för att lagra key-value-par

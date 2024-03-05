@@ -9,6 +9,8 @@ namespace password_manager
 {
     public class VaultKeyGenerator
     {
+
+        //Metod som genererar en valvnyckel
         public static byte[] GenerateVaultKey(string masterPassword, string secretKey)
         {
             byte[] secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);

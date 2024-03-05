@@ -9,6 +9,8 @@ namespace password_manager
 
     public class ManageFiles
     {
+
+        //Metod som kollar om en fil existerar. Om den inte existerar skapas en ny fil 
         public static void CreateFileIfNotExists(string filePath)
         {
             // Kontrollera om filen redan finns
@@ -28,6 +30,7 @@ namespace password_manager
         }
 
 
+        //Metod som skapar eller skriver över klientfilen, och lagrar en secret-key i den
         public static void CreateOrOverwriteClientFile(string filePath)
         {
             // Försöker skapa eller skriva över filen
@@ -41,9 +44,7 @@ namespace password_manager
                 Console.WriteLine($"Ett fel uppstod vid skapande av filen '{filePath}': {ex.Message}");
             }
 
-        
-
-            //Vi anropar metoden GenerateSecretKey() och lagrar nyckeln i byte arrayen secretKey
+             //Vi anropar metoden GenerateSecretKey() och lagrar nyckeln i byte arrayen secretKey
             string secretKey = SecretKey.GenerateSecretKey();
 
             SecretKey.SaveSecretKeyToFile(filePath, secretKey);
@@ -52,6 +53,7 @@ namespace password_manager
 
 
 
+        // Metod som skapar eller skriver över filen
         public static void CreateOrOverwriteServerFile(string filePath)
         {
             // Försöker skapa eller skriva över filen
@@ -67,6 +69,8 @@ namespace password_manager
 
         }
 
+
+        //Metod som skapar en ny klient-fil med en redan befintlig secretKey. Anropas via Create command
         public static void CreateNewClientFile(string filePath, string secretKey)
         {
             // Försöker skapa eller skriva över filen

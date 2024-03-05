@@ -10,6 +10,8 @@ namespace password_manager
     public class Vault
     {
 
+
+        //Metod som skapar strukturen för serverfilen och lagrar IV och ett krypterat, tomt valv
         public static void ServerFileStructure(string filepath, byte[] vaultKey)
         {
             // Strukturen för Serverfilen skapas 
@@ -26,9 +28,6 @@ namespace password_manager
 
             // Valvet krypteras med aes objektet
             string encryptedVault = EncryptVault(uncryptedVault, aes);
-
-
-
 
             // IV och det krypterade valvet sparas/lagras i filen
 
@@ -48,6 +47,7 @@ namespace password_manager
 
 
 
+        //Metod som krypterat ett valv
         public static string EncryptVault(Dictionary<string, string> uncryptedVault, Aes aes)
         {
             // Konvertera Dictionary till JSON-sträng
@@ -71,7 +71,7 @@ namespace password_manager
         }
 
 
-
+        //Metod som kollar om ett givet aes-objekt kan dekryptera ett krypterat valv
         public static bool CanDecryptVault(string encryptedData, Aes aes)
         {
             try
@@ -107,7 +107,7 @@ namespace password_manager
 
 
 
-
+        
         public static string DecryptVault(string encryptedData, Aes aes)
         {
             try

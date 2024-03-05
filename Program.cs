@@ -46,7 +46,7 @@ namespace password_manager
 
                             byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
 
-                            //Skapa aes, valv, kryptera valvet, spara iv och det krypterade valvet i serverfil
+                            //Skapa aes, valv och kryptera valvet. Spara iv och det krypterade valvet i serverfil
 
                             Vault.ServerFileStructure(serverFilePath, vaultKey);
 
@@ -61,7 +61,7 @@ namespace password_manager
                         if (args.Length == 3)
                         {
 
-                            //Lagrar argumenten för klientfil och serverfil
+                            //Lagrar argumenten för klientfil och serverfil 
                             string clientFilePath = args[1];
                             string serverFilePath = args[2];
 
@@ -79,14 +79,15 @@ namespace password_manager
 
                             try
                             { 
+                                //Vi hämtar innehållet som finns i serverfilen och deserialiserar det
                                 string serverFileContents = File.ReadAllText(serverFilePath);
                                 Dictionary<string, string> serverFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(serverFileContents);
 
-                                //Hämtar ut värdena som finns för IV och EncryptedVault i serverfilen
+                                //Hämtar ut värdena som finns för IV och EncryptedVault i serverfilen, och lagrar dessa 
                                 string ivValue = serverFileDict["IV"];
                                 string encryptedData = serverFileDict["EncryptedVault"];
 
-                                //Omvandlar iv till en byte[] 
+                                //Omvandlar iv till en byte[] (för att CreateAesObject tar emot iv som en byte[])
                                 byte[] iv = Convert.FromBase64String(ivValue);
 
                                 //Skapar ett aes-objekt utifrån vaultKey och iv
@@ -96,15 +97,15 @@ namespace password_manager
                                 if (Vault.CanDecryptVault(encryptedData, aes))      
 
                                 {
-                                    //Om valvet kunde krypteras med aes-objektet, skapas en ny klientfil där samma secretKey läggs in
+                                    //Om valvet kunde krypteras med aes-objektet, skapas en ny klientfil där secretKey lagras
 
                                     ManageFiles.CreateNewClientFile(clientFilePath, secretKey);
-                                    Console.WriteLine("Det har skapats en ny klient-fil med ditt secret-key");
+                                    Console.WriteLine("Det har skapats en ny klient-fil med din secret key");
 
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Error message");
+                                    Console.WriteLine("Dekrypteringen misslyckades.");
                                 }
                             }
                             catch (FileNotFoundException)
@@ -145,12 +146,19 @@ namespace password_manager
 
                     case "secret":
 
-                        //kod som anropas om första ordet är secret
+                        //Kod som anropas om första ordet är secret
+                        //Kontrollera att vi har rätt antal argument
+
+                        if (args.Length == 2){
+
+                            Command.SecretCommand(args);
 
 
-                        // vi måste ändra här, det ska ta emot secret <client> 
+                        }
+                        else
+                        {
 
-                        Command.SecretCommand(args);
+                        }
                         break;
 
                     default:
