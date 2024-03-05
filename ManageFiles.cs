@@ -41,13 +41,12 @@ namespace password_manager
                 Console.WriteLine($"Ett fel uppstod vid skapande av filen '{filePath}': {ex.Message}");
             }
 
-            //Instansierar ett objekt av klassen SecretKey så vi kan använda metoderna där
-            var secretKeyHandler = new SecretKey();
+        
 
             //Vi anropar metoden GenerateSecretKey() och lagrar nyckeln i byte arrayen secretKey
-            string secretKey = secretKeyHandler.GenerateSecretKey();
+            string secretKey = SecretKey.GenerateSecretKey();
 
-            secretKeyHandler.SaveSecretKeyToFile(filePath, secretKey);
+            SecretKey.SaveSecretKeyToFile(filePath, secretKey);
         }
 
 
@@ -67,5 +66,27 @@ namespace password_manager
             }
 
         }
+
+        public static void CreateNewClientFile(string filePath, string secretKey)
+        {
+            // Försöker skapa eller skriva över filen
+            try
+            {
+                CreateFileIfNotExists(filePath);
+
+                // Om filen redan finns, kommer detta att skriva över den
+                File.WriteAllText(filePath, ""); // Skapar en tom fil eller tömmer den om den redan finns
+
+                SecretKey.SaveSecretKeyToFile(filePath, secretKey);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ett fel uppstod vid skapande av filen '{filePath}': {ex.Message}");
+            }
+
+
+         
+        }
+
     }
 }

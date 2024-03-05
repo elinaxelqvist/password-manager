@@ -6,9 +6,9 @@ using System.ComponentModel.Design;
 
 namespace password_manager
 {
-    class Program
+   public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             if (args.Length > 0)
             {
@@ -58,39 +58,58 @@ namespace password_manager
                         break;
 
                     case "create":
-
-                        //kod som anropas om första ordet är create
                         if (args.Length == 3)
                         {
                             string clientFilePath = args[1];
-                            string serverFilePath = args[2]; 
+                            string serverFilePath = args[2];
 
-                            string masterPassword= MasterPassword();
+                            string masterPassword = MasterPassword();
 
-                            Console.WriteLine("Skriv din hemliga nyckel");
+                            Console.WriteLine("Ange din hemliga nyckel");
                             string secretKey = Console.ReadLine();
-                            
+
                             byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
 
-                            string serverFile= File.ReadAllText(clientFilePath);
-
-
-                            Aes aes = Aes_Kryptering.CreateAesObject(vaultKey,);
-
-                            if(Vault.CanDecryptVault(    ,aes)== true)
+                            try
                             {
-                                
+                                string serverFileContents = File.ReadAllText(serverFilePath);
+                                Dictionary<string, string> serverFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(serverFileContents);
+
+                                string ivValue = serverFileDict["IV"];
+                                string encryptedData = serverFileDict["EncryptedVault"];
+
+                                byte[] iv = Convert.FromBase64String(ivValue);
+                                Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
+
+                                if (Vault.CanDecryptVault(encryptedData, aes))
+                                {
+                                    ManageFiles.CreateNewClientFile(clientFilePath, secretKey);
+                                    Console.WriteLine("Det har skapats en ny klient-fil med ditt secret-key");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Error message");
+                                }
                             }
-                            else
+                            catch (FileNotFoundException)
                             {
-
+                                Console.WriteLine("Serverfilen finns inte.");
                             }
-
-
-
+                            catch (JsonException)
+                            {
+                                Console.WriteLine("Ogiltig JSON i serverfilen.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ett fel uppstod: {ex.Message}");
+                            }
                         }
+                        else
+                        {
+                            Console.WriteLine("Felaktigt antal argument.");
+                        }
+                        break;
 
-                            break;
 
                     case "get":
                         //kod som anropas om första ordet är get

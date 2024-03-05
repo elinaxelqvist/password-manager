@@ -8,7 +8,7 @@ namespace password_manager
 {
     public class SecretKey
     {
-        public string GenerateSecretKey()
+        public static string GenerateSecretKey()
         {
             // Skapa en byte-array för att lagra den hemliga nyckeln
             byte[] secretKey = new byte[32]; // 256 bitar
@@ -27,7 +27,7 @@ namespace password_manager
         }
 
 
-        public void SaveSecretKeyToFile(string filePath, string secretKey)
+        public static void SaveSecretKeyToFile(string filePath, string secretKey)
         {
             // Skapa ett dictionary för att lagra key-value-par
             Dictionary<string, string> userSecretKeys = new Dictionary<string, string>();
