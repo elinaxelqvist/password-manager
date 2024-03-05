@@ -10,6 +10,41 @@ namespace password_manager
     public class Vault
     {
 
+        public static void ServerFileStructure(string filepath, byte[] vaultKey)
+        {
+            // Strukturen för Serverfilen skapas 
+            Dictionary<string, string> serverFile = new Dictionary<string, string>();
+
+            // En IV genereras
+            byte[] iv = Aes_Kryptering.GenerateRandomIV();
+
+            // AES-objektet skapas
+            Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
+
+            // Okrypterade valvet skapas (för illustrationens skull)
+            Dictionary<string, string> uncryptedVault = new Dictionary<string, string>();
+
+            // Valvet krypteras
+            string encryptedVault = EncryptVault(uncryptedVault, aes);
+
+            // IV och det krypterade valvet sparas/lagras i filen
+
+            // Konvertera IV till en Base64-sträng
+            string stringIV = Convert.ToBase64String(iv);
+
+            // Lägg till IV och det krypterade valvet till serverFile-dictionary
+            serverFile.Add("IV", stringIV);
+            serverFile.Add("EncryptedVault", encryptedVault);
+
+            // Konvertera serverFile till JSON-sträng
+            string serverJson = JsonSerializer.Serialize(serverFile, new JsonSerializerOptions { WriteIndented = true });
+
+            // Skriv JSON-strängen till filen
+            File.WriteAllText(filepath, serverJson);
+        }
+
+
+
         public static string EncryptVault(Dictionary<string, string> uncryptedVault, Aes aes)
         {
             // Konvertera Dictionary till JSON-sträng
@@ -31,6 +66,13 @@ namespace password_manager
                 return Convert.ToBase64String(msEncrypt.ToArray());
             }
         }
+
+
+
+        
+
+
+        
 
 
 
