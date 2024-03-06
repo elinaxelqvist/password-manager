@@ -50,23 +50,36 @@ namespace password_manager
         //Metod som krypterat ett valv
         public static string EncryptVault(Dictionary<string, string> uncryptedVault, Aes aes)
         {
-            // Konvertera Dictionary till JSON-sträng
-            string json = JsonSerializer.Serialize(uncryptedVault);
-
-            // Skapa krypterare
-            ICryptoTransform encryptor = aes.CreateEncryptor();
-
-            using (MemoryStream msEncrypt = new MemoryStream())
+            try
             {
-                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                {
-                    // Konvertera JSON-sträng till byte-array och skriv till krypteringsströmmen
-                    byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-                    csEncrypt.Write(jsonBytes, 0, jsonBytes.Length);
-                }
+                // Konvertera Dictionary till JSON-sträng
+                string json = JsonSerializer.Serialize(uncryptedVault);
 
-                // Returnera det krypterade byte-arrayet som Base64-sträng
-                return Convert.ToBase64String(msEncrypt.ToArray());
+                // Skapa krypterare
+                ICryptoTransform encryptor = aes.CreateEncryptor();
+
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        // Konvertera JSON-sträng till byte-array och skriv till krypteringsströmmen
+                        byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+                        csEncrypt.Write(jsonBytes, 0, jsonBytes.Length);
+                    }
+
+                    // Returnera det krypterade byte-arrayet som Base64-sträng
+                    return Convert.ToBase64String(msEncrypt.ToArray());
+                }
+            }
+            catch (CryptographicException ex)
+            {
+                Console.WriteLine($"Encryption failed: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during encryption: {ex.Message}");
+                return null;
             }
         }
 
@@ -122,16 +135,7 @@ namespace password_manager
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
                             string decryptedJson = srDecrypt.ReadToEnd();
-
-                            // Kontrollera om det dekrypterade innehållet representerar en tom dictionary
-                            if (string.IsNullOrEmpty(decryptedJson.Trim()))
-                            {
-                                return "{}"; // Returnera en tom dictionary om valvet är tomt
-                            }
-                            else
-                            {
-                                return decryptedJson;
-                            }
+                            return decryptedJson;
                         }
                     }
                 }
@@ -152,7 +156,6 @@ namespace password_manager
                 return null;
             }
         }
-
 
         //hej
 
