@@ -135,6 +135,10 @@ namespace password_manager
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
                             string decryptedJson = srDecrypt.ReadToEnd();
+                            if (decryptedJson == null)
+                            {
+                                throw new Exception("Decrypted data is null.");
+                            }
                             return decryptedJson;
                         }
                     }
@@ -156,6 +160,7 @@ namespace password_manager
                 return null;
             }
         }
+
 
         //hej
 
