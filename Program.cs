@@ -151,9 +151,14 @@ namespace password_manager
                                     // Användaren får ange masterlösenord
                                     string masterPassword = MasterPassword();
 
+
+                                    Console.WriteLine(masterPassword);
+
                                     // Användaren får ange hemlig nyckel
                                     Console.WriteLine("Ange din hemliga nyckel");
                                     string secretKey = Console.ReadLine();
+
+                                    Console.WriteLine(secretKey);
 
                                     // Generera valvnyckel
                                     byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
@@ -165,9 +170,15 @@ namespace password_manager
                                     string ivValue = serverFileDict["IV"];
                                     string encryptedData = serverFileDict["EncryptedVault"];
 
+                                    Console.WriteLine(ivValue);
+                                    Console.WriteLine(encryptedData);
+
 
                                     // Skapa ett AES-objekt
-                                    Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, Convert.FromBase64String(ivValue));
+                                    byte[] iv=Convert.FromBase64String(ivValue);
+
+
+                                    Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
 
 
                                     if (Vault.CanDecryptVault(encryptedData, aes))
