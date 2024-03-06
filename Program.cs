@@ -162,11 +162,24 @@ namespace password_manager
                                 string encryptedData = serverFileDict["EncryptedVault"];
 
 
+                                // Skapa ett AES-objekt
+                                Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, Convert.FromBase64String(ivValue));
 
-                              
-                                // Dekryptera det befintliga valvet från serverfilen
-                                Dictionary<string, string> uncryptedVault = Vault.DecryptVault(serverFileDict["EncryptedVault"], aes);
 
+                                if (Vault.CanDecryptVault(encryptedData, aes))
+
+                                {
+                                    // Dekryptera det befintliga valvet från serverfilen
+                                    string decryptedVault = Vault.DecryptVault(encryptedData, aes); 
+
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Dekrypteringen misslyckades.");
+                                }
+
+                                
 
                                 // Läs det befintliga lösenordet från det dekrypterade valvet
                                 string existingPassword = uncryptedVault.ContainsKey(propertyKey) ? uncryptedVault[propertyKey] : null;
@@ -175,10 +188,9 @@ namespace password_manager
                                 string newPassword = generatePassword ? GenerateRandomPassword() : GetUserInputPassword();
 
                                 // Sätt det nya lösenordet för den angivna egenskapen i valvet
-                                uncryptedVault[propertyKey] = newPassword;
+                                decryptedVault[propertyKey] = newPassword;
 
-                                // Skapa ett AES-objekt
-                                Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, Convert.FromBase64String(ivValue));
+                                
 
                                 // Kryptera hela valvet och spara tillbaka till serverfilen
                                 string encryptedVault = Vault.EncryptVault(uncryptedVault, aes);
