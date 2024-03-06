@@ -168,7 +168,7 @@ namespace password_manager
                                     Console.WriteLine("Ange din hemliga nyckel");
                                     string secretKey = Console.ReadLine();
 
-                                    Console.WriteLine(secretKey);
+                                   // Console.WriteLine(secretKey);
 
                                     // Generera valvnyckel
                                     byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
@@ -180,8 +180,8 @@ namespace password_manager
                                     string ivValue = serverFileDict["IV"];
                                     string encryptedData = serverFileDict["EncryptedVault"];
 
-                                    Console.WriteLine(ivValue);
-                                    Console.WriteLine(encryptedData);
+                                   // Console.WriteLine(ivValue);
+                                   // Console.WriteLine(encryptedData);
 
 
                                     
@@ -241,13 +241,13 @@ namespace password_manager
 
                     case "delete":
 
-                        //kod som anropas om första ordet är delete
+                        
 
                         break;
 
                     case "secret":
 
-                        //Kod som anropas om första ordet är secret
+                        
                         //Kontrollera att vi har rätt antal argument
 
                         if (args.Length == 2){
