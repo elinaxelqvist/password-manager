@@ -13,8 +13,11 @@ namespace password_manager
         //Metod som genererar en valvnyckel
         public static byte[] GenerateVaultKey(string masterPassword, string secretKey)
         {
-            byte[] secretKeyBytes = Convert.FromBase64String(secretKey);
-            byte[] masterPasswordBytes = Convert.FromBase64String(masterPassword);
+           // byte[] secretKeyBytes = Convert.FromBase64String(secretKey); //SecretKey är hela innehållet i client file
+            //byte[] masterPasswordBytes = Convert.FromBase64String(masterPassword); //Detta är en klartext
+
+            byte[] masterPasswordBytes = Encoding.UTF8.GetBytes(masterPassword);
+            byte[] secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
 
             int iterations = 10000; // Antal iterationer (kan justeras efter behov)
             int keyLength = 32; // Längden på valvnyckeln i byte (kan justeras efter behov)
