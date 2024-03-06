@@ -61,10 +61,10 @@ namespace password_manager
                 using (MemoryStream msEncrypt = new MemoryStream())
                 {
                     using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
                     {
-                        // Konvertera JSON-sträng till byte-array och skriv till krypteringsströmmen
-                        byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-                        csEncrypt.Write(jsonBytes, 0, jsonBytes.Length);
+                        // Skriv JSON-strängen direkt till krypteringsströmmen
+                        swEncrypt.Write(json);
                     }
 
                     // Returnera det krypterade byte-arrayet som Base64-sträng
