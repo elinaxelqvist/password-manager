@@ -129,15 +129,11 @@ namespace password_manager
 
 
                     case "get":
-                        //kod som anropas om första ordet är get
+                        
                         break;
 
 
                     case "set":
-
-
-                        //kod som anropas om första ordet är set
-
 
                         if (args.Length == 4 || args.Length == 5)
                         {
@@ -147,74 +143,79 @@ namespace password_manager
 
                             bool generatePassword = args.Length == 5 && (args[4] == "-g" || args[4] == "--generate");
 
-                            try
+
+                            if (propertyKey != null)
                             {
-                                // Användaren får ange masterlösenord
-                                string masterPassword = MasterPassword();
-
-                                // Användaren får ange hemlig nyckel
-                                Console.WriteLine("Ange din hemliga nyckel");
-                                string secretKey = Console.ReadLine();
-
-                                // Generera valvnyckel
-                                byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
-
-                                // Läs in initieringsvektorn från serverfilen
-                                string serverFileContents = File.ReadAllText(serverFilePath);
-                                Dictionary<string, string> serverFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(serverFileContents);
-
-                                string ivValue = serverFileDict["IV"];
-                                string encryptedData = serverFileDict["EncryptedVault"];
-
-
-                                // Skapa ett AES-objekt
-                                Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, Convert.FromBase64String(ivValue));
-
-
-                                if (Vault.CanDecryptVault(encryptedData, aes))
-
+                                try
                                 {
-                                    // Dekryptera det befintliga valvet från serverfilen
-                                    string decryptedVault = Vault.DecryptVault(encryptedData, aes);
-                                    Dictionary<string, string> vaultDict = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedVault);
+                                    // Användaren får ange masterlösenord
+                                    string masterPassword = MasterPassword();
 
-                                    // Läs det befintliga lösenordet från det dekrypterade valvet
-                                    string existingPassword = vaultDict.ContainsKey(propertyKey) ? vaultDict[propertyKey] : null;
+                                    // Användaren får ange hemlig nyckel
+                                    Console.WriteLine("Ange din hemliga nyckel");
+                                    string secretKey = Console.ReadLine();
 
-                                    // Generera ett nytt lösenord antingen genom användaringång eller slumpmässigt
-                                    string newPassword = generatePassword ? GenerateRandomPassword() : GetUserInputPassword();
+                                    // Generera valvnyckel
+                                    byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
 
-                                    // Sätt det nya lösenordet för den angivna egenskapen i valvet
-                                    vaultDict[propertyKey] = newPassword;
+                                    // Läs in initieringsvektorn från serverfilen
+                                    string serverFileContents = File.ReadAllText(serverFilePath);
+                                    Dictionary<string, string> serverFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(serverFileContents);
 
-                                    // Kryptera hela valvet och spara tillbaka till serverfilen
-                                    string encryptedVault = Vault.EncryptVault(vaultDict, aes);
-                                    serverFileDict["EncryptedVault"] = encryptedVault;
-                                    File.WriteAllText(serverFilePath, JsonSerializer.Serialize(serverFileDict));
-
-                                    Console.WriteLine($"Lösenord för egenskapen {propertyKey} har lagts till/uppdaterats i valvet.");
+                                    string ivValue = serverFileDict["IV"];
+                                    string encryptedData = serverFileDict["EncryptedVault"];
 
 
+                                    // Skapa ett AES-objekt
+                                    Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, Convert.FromBase64String(ivValue));
 
+
+                                    if (Vault.CanDecryptVault(encryptedData, aes))
+
+                                    {
+                                        // Dekryptera det befintliga valvet från serverfilen
+                                        string decryptedVault = Vault.DecryptVault(encryptedData, aes);
+                                        Dictionary<string, string> vaultDict = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedVault);
+
+                                        // Läs det befintliga lösenordet från det dekrypterade valvet
+                                        string existingPassword = vaultDict.ContainsKey(propertyKey) ? vaultDict[propertyKey] : null;
+
+                                        // Generera ett nytt lösenord antingen genom användaringång eller slumpmässigt
+                                        string newPassword = generatePassword ? GenerateRandomPassword() : GetUserInputPassword();
+
+                                        // Sätt det nya lösenordet för den angivna egenskapen i valvet
+                                        vaultDict[propertyKey] = newPassword;
+
+                                        // Kryptera hela valvet och spara tillbaka till serverfilen
+                                        string encryptedVault = Vault.EncryptVault(vaultDict, aes);
+                                        serverFileDict["EncryptedVault"] = encryptedVault;
+                                        File.WriteAllText(serverFilePath, JsonSerializer.Serialize(serverFileDict));
+
+                                        Console.WriteLine($"Lösenord för egenskapen {propertyKey} har lagts till/uppdaterats i valvet.");
+
+
+
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Dekrypteringen misslyckades.");
+                                    }
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    Console.WriteLine("Dekrypteringen misslyckades.");
+                                    Console.WriteLine($"Ett fel inträffade: {ex.Message}");
                                 }
                             }
-                            catch (Exception ex)
+
+                            else
                             {
-                                Console.WriteLine($"Ett fel inträffade: {ex.Message}");
+                                Console.WriteLine("Du måste skriva in property");
                             }
                         }
                         else
                         {
                             Console.WriteLine("Felaktigt antal argument.");
                         }
-
-
-                        
-
                         break;
 
                     case "delete":
