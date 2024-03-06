@@ -134,6 +134,11 @@ namespace password_manager
 
 
                     case "set":
+
+
+                        //kod som anropas om första ordet är set
+
+
                         if (args.Length == 4 || args.Length == 5)
                         {
                             string clientFilePath = args[1];
@@ -196,14 +201,6 @@ namespace password_manager
                                 {
                                     Console.WriteLine("Dekrypteringen misslyckades.");
                                 }
-
-                                
-
-                              
-
-                                
-
-                              
                             }
                             catch (Exception ex)
                             {
@@ -216,7 +213,7 @@ namespace password_manager
                         }
 
 
-                        //kod som anropas om första ordet är set
+                        
 
                         break;
 
