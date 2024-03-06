@@ -45,9 +45,6 @@ namespace password_manager
             File.WriteAllText(filepath, serverJson);
         }
 
-
-
-        //Metod som krypterat ett valv
         public static string EncryptVault(Dictionary<string, string> uncryptedVault, Aes aes)
         {
             try
@@ -56,7 +53,7 @@ namespace password_manager
                 string json = JsonSerializer.Serialize(uncryptedVault);
 
                 // Skapa krypterare
-                ICryptoTransform encryptor = aes.CreateEncryptor();
+                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
                 using (MemoryStream msEncrypt = new MemoryStream())
                 {
@@ -84,7 +81,6 @@ namespace password_manager
         }
 
 
-        //Metod som kollar om ett givet aes-objekt kan dekryptera ett krypterat valv
         public static bool CanDecryptVault(string encryptedData, Aes aes)
         {
             try
@@ -93,7 +89,7 @@ namespace password_manager
                 byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
 
                 // Skapa dekrypterare
-                ICryptoTransform decryptor = aes.CreateDecryptor();
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
                 using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
                 {
@@ -117,16 +113,12 @@ namespace password_manager
             }
         }
 
-
-
-
-
         public static string DecryptVault(string encryptedData, Aes aes)
         {
             try
             {
                 byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
-                ICryptoTransform decryptor = aes.CreateDecryptor();
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
                 using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
                 {
@@ -165,7 +157,127 @@ namespace password_manager
             }
         }
 
-        //hej
+
+
+        ////Metod som krypterat ett valv
+        //public static string EncryptVault(Dictionary<string, string> uncryptedVault, Aes aes)
+        //{
+        //    try
+        //    {
+        //        // Konvertera Dictionary till JSON-sträng
+        //        string json = JsonSerializer.Serialize(uncryptedVault);
+
+        //        // Skapa krypterare
+        //        ICryptoTransform encryptor = aes.CreateEncryptor();
+
+        //        using (MemoryStream msEncrypt = new MemoryStream())
+        //        {
+        //            using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+        //            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+        //            {
+        //                // Skriv JSON-strängen direkt till krypteringsströmmen
+        //                swEncrypt.Write(json);
+        //            }
+
+        //            // Returnera det krypterade byte-arrayet som Base64-sträng
+        //            return Convert.ToBase64String(msEncrypt.ToArray());
+        //        }
+        //    }
+        //    catch (CryptographicException ex)
+        //    {
+        //        Console.WriteLine($"Encryption failed: {ex.Message}");
+        //        return null;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"An error occurred during encryption: {ex.Message}");
+        //        return null;
+        //    }
+        //}
+
+
+        //Metod som kollar om ett givet aes-objekt kan dekryptera ett krypterat valv
+        //public static bool CanDecryptVault(string encryptedData, Aes aes)
+        //{
+        //    try
+        //    {
+        //        // Konvertera Base64-strängen till byte-array
+        //        byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
+
+        //        // Skapa dekrypterare
+        //        ICryptoTransform decryptor = aes.CreateDecryptor();
+
+        //        using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
+        //        {
+        //            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+        //            {
+        //                // Försök att dekryptera, men vi behöver inte faktiskt läsa in data här
+        //                // Vi kommer bara hit om dekrypteringen lyckas
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    catch (FormatException)
+        //    {
+        //        // Felaktig Base64-sträng
+        //        return false;
+        //    }
+        //    catch (CryptographicException)
+        //    {
+        //        // Felaktig nyckel eller IV
+        //        return false;
+        //    }
+        //}
+
+
+
+
+
+        //public static string DecryptVault(string encryptedData, Aes aes)
+        //{
+        //    try
+        //    {
+        //        byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
+        //        ICryptoTransform decryptor = aes.CreateDecryptor();
+
+        //        using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
+        //        {
+        //            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+        //            {
+        //                using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+        //                {
+        //                    string decryptedJson = srDecrypt.ReadToEnd();
+
+        //                    // Kontrollera om dekrypterad JSON är tom
+        //                    if (string.IsNullOrEmpty(decryptedJson))
+        //                    {
+        //                        Console.WriteLine("Decrypted JSON is empty.");
+        //                        return "{}"; // Returnera en tom dictionary-sträng
+        //                    }
+
+        //                    return decryptedJson;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (FormatException ex)
+        //    {
+        //        Console.WriteLine($"Invalid Base64 string: {ex.Message}");
+        //        return null;
+        //    }
+        //    catch (CryptographicException ex)
+        //    {
+        //        Console.WriteLine($"Decryption failed: {ex.Message}");
+        //        return null;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"An error occurred during decryption: {ex.Message}");
+        //        return null;
+        //    }
+        //}
+
+        ////hej
 
 
 
