@@ -133,7 +133,7 @@ namespace password_manager
                         break;
 
 
-                    case "set": //Set.......
+                    case "set":
 
                         if (args.Length == 4 || args.Length == 5)
                         {
