@@ -112,33 +112,38 @@ namespace password_manager
         {
             try
             {
-                // Konvertera Base64-strängen till byte-array
                 byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
-
-                // Skapa dekrypterare
                 ICryptoTransform decryptor = aes.CreateDecryptor();
 
                 using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        // Läs dekrypterade data från krypteringsströmmen
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
                             string decryptedJson = srDecrypt.ReadToEnd();
-                            return decryptedJson;
+
+                            // Kontrollera om det dekrypterade innehållet representerar en tom dictionary
+                            if (string.IsNullOrEmpty(decryptedJson.Trim()))
+                            {
+                                return "{}"; // Returnera en tom dictionary om valvet är tomt
+                            }
+                            else
+                            {
+                                return decryptedJson;
+                            }
                         }
                     }
                 }
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
-                Console.WriteLine("Invalid Base64 string.");
+                Console.WriteLine($"Invalid Base64 string: {ex.Message}");
                 return null;
             }
-            catch (CryptographicException)
+            catch (CryptographicException ex)
             {
-                Console.WriteLine("Decryption failed. Incorrect key or IV.");
+                Console.WriteLine($"Decryption failed: {ex.Message}");
                 return null;
             }
             catch (Exception ex)
