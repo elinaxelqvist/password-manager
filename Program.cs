@@ -174,10 +174,10 @@ namespace password_manager
                                     Console.WriteLine(encryptedData);
 
 
-                                    // Skapa ett AES-objekt
+                                    
                                     byte[] iv=Convert.FromBase64String(ivValue);
 
-
+                                    // Skapa ett AES-objekt
                                     Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
 
 

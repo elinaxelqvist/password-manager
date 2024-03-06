@@ -135,10 +135,14 @@ namespace password_manager
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
                             string decryptedJson = srDecrypt.ReadToEnd();
-                            if (decryptedJson == null)
+
+                            // Kontrollera om dekrypterad JSON är tom
+                            if (string.IsNullOrEmpty(decryptedJson))
                             {
-                                throw new Exception("Decrypted data is null.");
+                                Console.WriteLine("Decrypted JSON is empty.");
+                                return "{}"; // Returnera en tom dictionary-sträng
                             }
+
                             return decryptedJson;
                         }
                     }
@@ -160,7 +164,6 @@ namespace password_manager
                 return null;
             }
         }
-
 
         //hej
 
