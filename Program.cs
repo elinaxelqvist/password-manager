@@ -33,7 +33,8 @@ namespace password_manager
 
 
                             //hämtar secret key och skriver ut i terminalen
-                            string secretKey = File.ReadAllText(clientFilePath);
+                            string secretKey = File.ReadAllText(clientFilePath); //Är bara en sträng.... inte en klass.
+
 
                             Console.WriteLine("Här är din hemliga nyckel. Skriv ned det och kom ihåg det");
                             Console.WriteLine(secretKey);
@@ -44,7 +45,7 @@ namespace password_manager
 
                             //Skapa valvnyckeln
 
-                            byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
+                            byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey); //Detta är hela filen, inte själva värdet på nyckeln
 
                             //Skapa aes, valv och kryptera valvet. Spara iv och det krypterade valvet i serverfil
 

@@ -13,7 +13,7 @@ namespace password_manager
         public static string GenerateSecretKey()
         {
             // Skapa en byte-array för att lagra den hemliga nyckeln
-            byte[] secretKey = new byte[32]; // 256 bitar
+            byte[] secretKey = new byte[32]; // 256 bitar //Är ett helt JSON objekt, med måsvingar etc. Det är ingen byte array. Vi vill bara åt värdet av secretKey.
 
             // Skapa och använd en instans av RandomNumberGenerator
             using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
@@ -22,7 +22,7 @@ namespace password_manager
                 rng.GetBytes(secretKey);
             }
 
-            string stringSecretKey = Convert.ToBase64String(secretKey);
+            string stringSecretKey = Convert.ToBase64String(secretKey); //Denna är redan en sträng, kan ej konverteras till en sträng.. Base64 är ingen kryptering.
 
             // Returnera den genererade nyckeln
             return stringSecretKey;
