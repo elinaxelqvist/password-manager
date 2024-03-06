@@ -255,10 +255,7 @@ namespace password_manager
         //}
     }
 }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 
 
 
