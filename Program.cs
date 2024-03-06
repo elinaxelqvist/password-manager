@@ -170,7 +170,25 @@ namespace password_manager
 
                                 {
                                     // Dekryptera det befintliga valvet från serverfilen
-                                    string decryptedVault = Vault.DecryptVault(encryptedData, aes); 
+                                    string decryptedVault = Vault.DecryptVault(encryptedData, aes);
+                                    Dictionary<string, string> vaultDict = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedVault);
+
+                                    // Läs det befintliga lösenordet från det dekrypterade valvet
+                                    string existingPassword = vaultDict.ContainsKey(propertyKey) ? vaultDict[propertyKey] : null;
+
+                                    // Generera ett nytt lösenord antingen genom användaringång eller slumpmässigt
+                                    string newPassword = generatePassword ? GenerateRandomPassword() : GetUserInputPassword();
+
+                                    // Sätt det nya lösenordet för den angivna egenskapen i valvet
+                                    vaultDict[propertyKey] = newPassword;
+
+                                    // Kryptera hela valvet och spara tillbaka till serverfilen
+                                    string encryptedVault = Vault.EncryptVault(vaultDict, aes);
+                                    serverFileDict["EncryptedVault"] = encryptedVault;
+                                    File.WriteAllText(serverFilePath, JsonSerializer.Serialize(serverFileDict));
+
+                                    Console.WriteLine($"Lösenord för egenskapen {propertyKey} har lagts till/uppdaterats i valvet.");
+
 
 
                                 }
@@ -181,23 +199,11 @@ namespace password_manager
 
                                 
 
-                                // Läs det befintliga lösenordet från det dekrypterade valvet
-                                string existingPassword = uncryptedVault.ContainsKey(propertyKey) ? uncryptedVault[propertyKey] : null;
-
-                                // Generera ett nytt lösenord antingen genom användaringång eller slumpmässigt
-                                string newPassword = generatePassword ? GenerateRandomPassword() : GetUserInputPassword();
-
-                                // Sätt det nya lösenordet för den angivna egenskapen i valvet
-                                decryptedVault[propertyKey] = newPassword;
+                              
 
                                 
 
-                                // Kryptera hela valvet och spara tillbaka till serverfilen
-                                string encryptedVault = Vault.EncryptVault(uncryptedVault, aes);
-                                serverFileDict["EncryptedVault"] = encryptedVault;
-                                File.WriteAllText(serverFilePath, JsonSerializer.Serialize(serverFileDict));
-
-                                Console.WriteLine($"Lösenord för egenskapen {propertyKey} har lagts till/uppdaterats i valvet.");
+                              
                             }
                             catch (Exception ex)
                             {
