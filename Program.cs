@@ -164,9 +164,20 @@ namespace password_manager
 
                                     Console.WriteLine(masterPassword);
 
-                                    // Användaren får ange sin hemliga nyckel
-                                    Console.WriteLine("Ange din hemliga nyckel");
-                                    string secretKey = Console.ReadLine();
+
+
+                                    //hämtar secret key 
+                                    string clientFile = File.ReadAllText(clientFilePath); //Är bara en sträng.... inte en klass.
+
+
+
+                                    Dictionary<string, string> clientFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(clientFile); //Deserialiserar innehållet 
+
+
+
+                                    string secretKey = clientFileDict["SecretKey"];         //Vi hämtar endast ut value för SecretKey
+
+                                    
 
                                    // Console.WriteLine(secretKey);
 
