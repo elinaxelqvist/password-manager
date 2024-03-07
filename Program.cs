@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Security.Cryptography;
 using System.ComponentModel.Design;
+using System.Collections;
 
 namespace password_manager
 {
@@ -75,6 +76,7 @@ namespace password_manager
                             string clientFilePath = args[1];
                             string serverFilePath = args[2];
 
+                            
 
                             // Användaren får ange sitt master password
                             string masterPassword = MasterPassword();
@@ -87,6 +89,8 @@ namespace password_manager
                             //Metoden som genererar valvnyckeln anropas
                             byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
 
+                            Console.WriteLine(secretKey);
+
                             try
                             { 
                                 //Vi hämtar innehållet som finns i serverfilen och deserialiserar det
@@ -96,6 +100,9 @@ namespace password_manager
                                 //Hämtar ut värdena som finns för IV och EncryptedVault i serverfilen, och lagrar dessa 
                                 string ivValue = serverFileDict["IV"];
                                 string encryptedData = serverFileDict["EncryptedVault"];
+
+                                Console.WriteLine(ivValue);
+                                Console.WriteLine(encryptedData);
 
                                 //Omvandlar iv till en byte[] (för att CreateAesObject tar emot iv som en byte[])
                                 byte[] iv = Convert.FromBase64String(ivValue);
@@ -107,8 +114,20 @@ namespace password_manager
                                 // Kontrollera om nödvändiga värden är null innan anrop till CanDecryptVault
                                 if (encryptedData != null && aes != null)
                                 {
+
+                                    Console.WriteLine(secretKey);
+
+
+                                    string aesKey= Convert.ToBase64String(aes.Key);
+                                    Console.WriteLine(aesKey);
+                                    string aesIV=Convert.ToBase64String(aes.IV);
+                                    Console.WriteLine(aesIV);
+
                                     if (Vault.CanDecryptVault(encryptedData, aes))
+
                                     {
+
+                                        Console.WriteLine(secretKey);
                                         // Om valvet kunde krypteras med aes-objektet, skapas en ny klientfil där secretKey lagras
                                         ManageFiles.CreateNewClientFile(clientFilePath, secretKey);
                                         Console.WriteLine("Det har skapats en ny klient-fil med din secret key");

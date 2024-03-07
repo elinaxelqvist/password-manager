@@ -91,6 +91,7 @@ namespace password_manager
                 // Skapa dekrypterare
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
+
                 using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
@@ -102,24 +103,35 @@ namespace password_manager
 
                         // Om det inte finns några bytes att läsa in, dekrypteringen misslyckades
                         if (bytesRead == 0)
+                        {
                             return false;
+                        }
 
                         // Om vi når hit, dekrypteringen lyckades och det finns data att läsa
                         return true;
                     }
                 }
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
                 // Felaktig Base64-sträng
+                Console.WriteLine($"Felaktig Base64-sträng: {ex.Message}");
                 return false;
             }
-            catch (CryptographicException)
+            catch (CryptographicException ex)
             {
                 // Felaktig nyckel eller IV
+                Console.WriteLine($"Felaktig nyckel eller IV: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Övriga oväntade fel
+                Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
                 return false;
             }
         }
+
 
 
         public static string DecryptVault(string encryptedData, Aes aes)
