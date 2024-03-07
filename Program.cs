@@ -140,11 +140,11 @@ namespace password_manager
 
                     case "get":
 
-                        if(args.Length==3 || args.Length == 4)
+                        if (args.Length == 3 || args.Length == 4)
                         {
                             string clientFilePath = args[1];
-                            string serverFilePath= args[2];
-                            string propertyKey= args[3];
+                            string serverFilePath = args[2];
+
 
                             // Användaren får ange masterlösenord
                             string masterPassword = MasterPassword();
@@ -186,38 +186,57 @@ namespace password_manager
                             // Skapa ett AES-objekt
                             Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
 
-                            if (Vault.CanDecryptVault(encryptedData, aes))
+
+                            if (args.Length == 4)
                             {
-                                // Dekryptera det befintliga valvet från serverfilen
-                                string decryptedVault = Vault.DecryptVault(encryptedData, aes);
-                                Dictionary<string, string> vaultDict = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedVault);
-
-
-                                if(propertyKey == null)
-                                {
-                                    // Anropa funktionen för att hämta alla propertyKeys
-                                    List<string> propertyKeys = GetAllPropertyKeys(vaultDict);
-
-                                    // Skriv ut alla propertyKeys till konsolen
-                                    Console.WriteLine("Alla propertyKeys i vaultDict:");
-                                    foreach (string key in propertyKeys)
-                                    {
-                                        Console.WriteLine(key);
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine("hej");
-                                }
-
-
+                                string propertyKey = args[3];
 
 
                             }
                             else
                             {
-                                Console.WriteLine("Dekrypteringen misslyckades");
+                                string propertyKey = null;
+
+                                if (Vault.CanDecryptVault(encryptedData, aes))
+                                {
+                                    // Dekryptera det befintliga valvet från serverfilen
+                                    string decryptedVault = Vault.DecryptVault(encryptedData, aes);
+                                    Dictionary<string, string> vaultDict = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedVault);
+
+
+                                    if (propertyKey == null)
+                                    {
+                                        // Anropa funktionen för att hämta alla propertyKeys
+                                        List<string> propertyKeys = GetAllPropertyKeys(vaultDict);
+
+                                        // Skriv ut alla propertyKeys till konsolen
+                                        Console.WriteLine("Alla propertyKeys i vaultDict:");
+                                        foreach (string key in propertyKeys)
+                                        {
+                                            Console.WriteLine(key);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("hej");
+                                    }
+                                }
+
+
+
+
+
+
+
+
+
+
+
                             }
+
+
+
+                       
 
 
 
