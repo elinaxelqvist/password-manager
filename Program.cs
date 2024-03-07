@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Security.Cryptography;
 using System.ComponentModel.Design;
 using System.Collections;
-using System.Text.Json.Serialization;
+
 
 
 
@@ -79,7 +79,7 @@ namespace password_manager
                             string clientFilePath = args[1];
                             string serverFilePath = args[2];
 
-                            
+                 
 
                             // Användaren får ange sitt master password
                             string masterPassword = MasterPassword();

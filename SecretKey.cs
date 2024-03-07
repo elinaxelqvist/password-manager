@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+
 
 
 namespace password_manager
@@ -31,44 +31,24 @@ namespace password_manager
         }
 
 
+        //Metod som skapar strukturen för en ny klient-fil, och lagrar secretKey i den
         public static void SaveSecretKeyToFile(string filePath, string secretKey)
         {
-            var options = new JsonSerializerOptions
+            // Skapa en sträng med JSON-formatet manuellt
+            string jsonContent = $"{{ \"SecretKey\": \"{secretKey}\" }}";
+
+            try
             {
-                WriteIndented = true,
-                Converters = { new StringJsonConverter() } // Använd vår anpassade konverterare
-            };
-
-            var userSecretKeys = new Dictionary<string, string>();
-            userSecretKeys["SecretKey"] = secretKey;
-
-            string updatedJson = JsonSerializer.Serialize(userSecretKeys, options);
-            File.WriteAllText(filePath, updatedJson);
-        }
-    }
-
-    public class StringJsonConverter : JsonConverter<string>
-    {
-        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                return reader.GetString();
+                // Skriv JSON-strängen till filen
+                File.WriteAllText(filePath, jsonContent);
             }
-            else if (reader.TokenType == JsonTokenType.Null)
+            catch (Exception ex)
             {
-                return null;
-            }
-            else
-            {
-                throw new JsonException();
+                Console.WriteLine($"Ett fel uppstod vid skrivning till filen '{filePath}': {ex.Message}");
             }
         }
 
-        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value ?? string.Empty); // Skriv ut strängen utan att använda escape-tecken
-        }
+
     }
 }
 
