@@ -191,6 +191,47 @@ namespace password_manager
                             {
                                 string propertyKey = args[3];
 
+                                if(Vault.CanDecryptVault(encryptedData, aes))
+                                {
+                                    // Dekryptera det befintliga valvet från serverfilen
+                                    string decryptedVault = Vault.DecryptVault(encryptedData, aes);
+                                    Dictionary<string, string> vaultDict = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedVault);
+
+                                    // Anropa funktionen för att hämta alla propertyKeys
+                                    List<string> propertyKeys = GetAllPropertyKeys(vaultDict);
+
+                                    bool foundKey = false; // Flagga för att kontrollera om propertyKey hittades
+
+                                    // Loopa igenom varje propertyKey
+                                    for (int i = 0; i < propertyKeys.Count; i++)
+                                    {
+                                        // Kontrollera om propertyKey matchar en nyckel i vaultDict
+                                        if (propertyKeys[i] == propertyKey)
+                                        {
+                                            // Hämta lösenordet för den matchande propertyKey
+                                            string password = vaultDict[propertyKey];
+                                            Console.WriteLine(password);
+                                            foundKey = true; // Sätt flaggan till true eftersom nyckeln har hittats
+                                            break; // Avsluta loopen eftersom nyckeln har hittats
+                                        }
+                                    }
+
+                                    // Om propertyKey inte hittades
+                                    if (!foundKey)
+                                    {
+                                        Console.WriteLine($"Fel: PropertyKey \"{propertyKey}\" finns inte i valvet.");
+                                    }
+
+
+
+
+
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Dekrypteringen misslyckades");
+                                }
 
                             }
                             else
@@ -218,7 +259,7 @@ namespace password_manager
                                     }
                                     else
                                     {
-                                        Console.WriteLine("hej");
+                                        Console.WriteLine("Dekrypteringen misslyckades");
                                     }
                                 }
 
