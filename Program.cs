@@ -139,7 +139,90 @@ namespace password_manager
 
 
                     case "get":
-                        
+
+                        if(args.Length==3 || args.Length == 4)
+                        {
+                            string clientFilePath = args[1];
+                            string serverFilePath= args[2];
+                            string propertyKey= args[3];
+
+                            // Användaren får ange masterlösenord
+                            string masterPassword = MasterPassword();
+
+
+                            Console.WriteLine(masterPassword);
+
+
+
+                            //hämtar secret key 
+                            string clientFile = File.ReadAllText(clientFilePath); //Är bara en sträng.... inte en klass.
+
+
+
+                            Dictionary<string, string> clientFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(clientFile); //Deserialiserar innehållet 
+
+
+
+                            string secretKey = clientFileDict["SecretKey"];         //Vi hämtar endast ut value för SecretKey
+
+
+                            // Generera valvnyckel
+                            byte[] vaultKey = VaultKeyGenerator.GenerateVaultKey(masterPassword, secretKey);
+
+                            // Läs in initieringsvektorn från serverfilen
+                            string serverFileContents = File.ReadAllText(serverFilePath);
+                            Dictionary<string, string> serverFileDict = JsonSerializer.Deserialize<Dictionary<string, string>>(serverFileContents);
+
+                            string ivValue = serverFileDict["IV"];
+                            string encryptedData = serverFileDict["EncryptedVault"];
+
+                            // Console.WriteLine(ivValue);
+                            // Console.WriteLine(encryptedData);
+
+
+
+                            byte[] iv = Convert.FromBase64String(ivValue);
+
+                            // Skapa ett AES-objekt
+                            Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
+
+                            if (Vault.CanDecryptVault(encryptedData, aes))
+                            {
+                                // Dekryptera det befintliga valvet från serverfilen
+                                string decryptedVault = Vault.DecryptVault(encryptedData, aes);
+                                Dictionary<string, string> vaultDict = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedVault);
+
+
+                                if(propertyKey == null)
+                                {
+                                    // Anropa funktionen för att hämta alla propertyKeys
+                                    List<string> propertyKeys = GetAllPropertyKeys(vaultDict);
+
+                                    // Skriv ut alla propertyKeys till konsolen
+                                    Console.WriteLine("Alla propertyKeys i vaultDict:");
+                                    foreach (string key in propertyKeys)
+                                    {
+                                        Console.WriteLine(key);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("hej");
+                                }
+
+
+
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("Dekrypteringen misslyckades");
+                            }
+
+
+
+                        }
+
                         break;
 
 
@@ -329,8 +412,26 @@ namespace password_manager
             return userInputPassword;
         }
 
+
+        static List<string> GetAllPropertyKeys(Dictionary<string, string> vaultDict)
+        {
+            // Skapa en ny lista för att hålla propertyKeys
+            List<string> propertyKeys = new List<string>();
+
+            // Loopa genom varje nyckel-värde-par i vaultDict
+            foreach (var kvp in vaultDict)
+            {
+                // Lägg till nyckeln till listan
+                propertyKeys.Add(kvp.Key);
+            }
+
+            // Returnera listan med propertyKeys
+            return propertyKeys;
+        }
     }
+
 }
+
 
 
 
