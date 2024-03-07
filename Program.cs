@@ -103,19 +103,24 @@ namespace password_manager
                                 //Skapar ett aes-objekt utifrån vaultKey och iv
                                 Aes aes = Aes_Kryptering.CreateAesObject(vaultKey, iv);
 
-                                
-                                if (Vault.CanDecryptVault(encryptedData, aes))      
 
+                                // Kontrollera om nödvändiga värden är null innan anrop till CanDecryptVault
+                                if (encryptedData != null && aes != null)
                                 {
-                                    //Om valvet kunde krypteras med aes-objektet, skapas en ny klientfil där secretKey lagras
-
-                                    ManageFiles.CreateNewClientFile(clientFilePath, secretKey);
-                                    Console.WriteLine("Det har skapats en ny klient-fil med din secret key");
-
+                                    if (Vault.CanDecryptVault(encryptedData, aes))
+                                    {
+                                        // Om valvet kunde krypteras med aes-objektet, skapas en ny klientfil där secretKey lagras
+                                        ManageFiles.CreateNewClientFile(clientFilePath, secretKey);
+                                        Console.WriteLine("Det har skapats en ny klient-fil med din secret key");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Fel: Ogiltigt masterpassword eller secretKey.");
+                                    }
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Dekrypteringen misslyckades.");
+                                    Console.WriteLine("Fel: Kunde inte kontrollera valvet med angiven data.");
                                 }
                             }
                             catch (FileNotFoundException)

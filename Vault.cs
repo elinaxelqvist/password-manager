@@ -95,8 +95,16 @@ namespace password_manager
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        // Försök att dekryptera, men vi behöver inte faktiskt läsa in data här
-                        // Vi kommer bara hit om dekrypteringen lyckas
+                        // Försök att dekryptera
+                        // Läs in data från CryptoStream och skriv till en temporär buffer
+                        byte[] buffer = new byte[1024];
+                        int bytesRead = csDecrypt.Read(buffer, 0, buffer.Length);
+
+                        // Om det inte finns några bytes att läsa in, dekrypteringen misslyckades
+                        if (bytesRead == 0)
+                            return false;
+
+                        // Om vi når hit, dekrypteringen lyckades och det finns data att läsa
                         return true;
                     }
                 }
@@ -112,6 +120,7 @@ namespace password_manager
                 return false;
             }
         }
+
 
         public static string DecryptVault(string encryptedData, Aes aes)
         {
