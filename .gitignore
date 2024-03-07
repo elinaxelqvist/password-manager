@@ -11,6 +11,10 @@ autom4te.cache/
 tarballs/
 test-results/
 
+
+# Ignore client and server files
+*.json
+
 # Mac bundle stuff
 *.dmg
 *.app
