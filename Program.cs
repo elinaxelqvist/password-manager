@@ -526,12 +526,22 @@ namespace password_manager
 
                     case "secret":
 
-                        
+
                         //Kontrollera att vi har rätt antal argument
 
-                        if (args.Length == 2){
+                        if (args.Length == 2)
+                        {
 
-                            Command.SecretCommand(args);
+                            string secretKey = Command.SecretCommand(args);
+
+                            if(secretKey != null)
+                            {
+                                Console.WriteLine(secretKey);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Filen existerar inte");
+                            }
 
 
                         }

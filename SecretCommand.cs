@@ -12,7 +12,7 @@ namespace password_manager
 
     {
 
-        public static void SecretCommand(string[] input)
+        public static string SecretCommand(string[] input)
         {
             if (File.Exists(input[1]))
             {
@@ -26,16 +26,20 @@ namespace password_manager
                 {
                     // Hämta värdet som är associerat med nyckeln "SecretKey" och skriv ut det
                     string secretKey = clientData["SecretKey"];
-                    Console.WriteLine($"SecretKey: {secretKey}");
+
+                    return secretKey;
                 }
                 else
                 {
                     Console.WriteLine("Kunde inte hitta SecretKey i JSON-data eller JSON-data var ogiltig.");
+                    return null;
                 }
             }
             else
             {
                 Console.WriteLine("Filen existerar inte.");
+
+                return null;
             }
         }
 
