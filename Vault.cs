@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace password_manager
 {
@@ -87,6 +88,11 @@ namespace password_manager
             {
                 // Konvertera Base64-strängen till byte-array
                 byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
+              
+                string aesKey = Convert.ToBase64String(aes.Key);
+                Console.WriteLine(aesKey);
+                string aesIV = Convert.ToBase64String(aes.IV);
+                Console.WriteLine(aesIV);
 
                 // Skapa dekrypterare
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
