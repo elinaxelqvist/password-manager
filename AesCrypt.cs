@@ -19,17 +19,6 @@ namespace password_manager
             }
         }
         
-        /*Osäker om vi använder denna längre?
-        public static void PrintByteArray(byte[] bytes)
-        {
-            foreach (byte b in bytes)
-            {
-                Console.Write(b.ToString("x2") + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine();
-
-        }*/
 
         //Skapar AES-objekt
         public static Aes CreateAesObject(byte[] vaultKey, byte[] iv)
