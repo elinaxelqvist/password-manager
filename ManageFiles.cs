@@ -88,10 +88,6 @@ namespace password_manager
             {
                 Console.WriteLine($"Ett fel uppstod vid skapande av filen '{filePath}': {ex.Message}");
             }
-
-
-         
         }
-
     }
 }

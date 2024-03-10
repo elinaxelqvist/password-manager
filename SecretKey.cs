@@ -47,8 +47,6 @@ namespace password_manager
                 Console.WriteLine($"Ett fel uppstod vid skrivning till filen '{filePath}': {ex.Message}");
             }
         }
-
-
     }
 }
 

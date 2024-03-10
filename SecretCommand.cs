@@ -42,11 +42,7 @@ namespace password_manager
                 return null;
             }
         }
-
     }
-
-
-
 }
           
             
